@@ -67,7 +67,7 @@
 </form>
 @endsection --}}
 
-@section('content')
+@section('contentw')
 
 <form id="productForm" action="{{ route('admin.product.save') }}" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
   @csrf

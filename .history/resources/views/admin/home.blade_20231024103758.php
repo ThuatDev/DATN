@@ -103,18 +103,15 @@
                 <input type="text" name="sku_code" class="form-control" id="sku_code" placeholder="Mã sản Phẩm" required autocomplete="off">
               </div>
             </div>
-           <div class="col-md-4">
-  <div class="form-group">
-    <label>Hãng Sản Xuất <span class="text-red">*</span></label>
-    <select class="form-control" name="producer_id">
-      <option value="">-- Chọn hãng sản xuất --</option>
-      @foreach ($producers as $producer)
-        <option value="{{ $producer->id }}">{{ $producer->name }}</option>
-      @endforeach
-    </select>
-  </div>
-</div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Hãng Sản Xuất <span class="text-red">*</span></label>
+                <select class="form-control" name="producer_id"
+                  <option value="">-- Chọn hãng sản xuất --</option>
 
+                </select>
+              </div>
+            </div>
           </div>
           <div class="row">
             <div class="col-md-4">

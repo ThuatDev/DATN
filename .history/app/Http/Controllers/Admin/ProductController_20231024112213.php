@@ -116,7 +116,6 @@ public function index()
   {
     $producers = Producer::select('id', 'name')->orderBy('name', 'asc')->get();
     // dd($producers);
-
     return view('admin.main')->with('producers', $producers);
 
   }

@@ -196,7 +196,7 @@
   @include  ('admin.sidebar')
 
 
-
+@section('content')
 
 <form id="productForm" action="{{ route('admin.product.save') }}" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
   @csrf
@@ -236,10 +236,10 @@
   <div class="form-group">
     <label>Hãng Sản Xuất <span class="text-red">*</span></label>
     <select class="form-control" name="producer_id">
-      <option value="">-- Chọn hãng sản xuất --</option>
+      {{-- <option value="">-- Chọn hãng sản xuất --</option>
       @foreach ($producers as $producer)
         <option value="{{ $producer->id }}">{{ $producer->name }}</option>
-      @endforeach
+      @endforeach --}}
     </select>
   </div>
 </div>
@@ -368,6 +368,7 @@
     </div>
   </div>
 </form>
+@endsection
 
   @include ('admin.footer')
 </body>

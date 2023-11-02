@@ -196,7 +196,7 @@
   @include  ('admin.sidebar')
 
 
-
+@section('content')
 
 <form id="productForm" action="{{ route('admin.product.save') }}" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
   @csrf
@@ -368,6 +368,7 @@
     </div>
   </div>
 </form>
+@endsection
 
   @include ('admin.footer')
 </body>

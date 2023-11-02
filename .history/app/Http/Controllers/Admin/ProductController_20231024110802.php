@@ -7,13 +7,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\View;
+
 use App\Models\Product;
 use App\Models\Producer;
 use App\Models\Promotion;
 use App\Models\ProductDetail;
 use App\Models\ProductImage;
 use App\Models\OrderDetail;
+
 class ProductController extends Controller
 {
     public function boot()
@@ -38,9 +39,7 @@ public function index()
         $query->where([['import_quantity', '>', 0], ['quantity', '>', 0]]);
       }
     ])->latest()->get();
-   dd($products);
-    // return view('admin.product.index')->with(['products' => $products, 'producers' => $producers]);
-
+    return view('admin.main', compact('producers', 'products'));
 }
 
 
@@ -115,10 +114,7 @@ public function index()
   public function new(Request $request)
   {
     $producers = Producer::select('id', 'name')->orderBy('name', 'asc')->get();
-    // dd($producers);
-
     return view('admin.main')->with('producers', $producers);
-
   }
 
   public function save(Request $request)

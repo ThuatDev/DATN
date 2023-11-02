@@ -67,7 +67,6 @@
 </form>
 @endsection --}}
 
-@section('content')
 
 <form id="productForm" action="{{ route('admin.product.save') }}" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
   @csrf
@@ -84,7 +83,7 @@
         <div class="col-md-3">
           <label for="title">Hình Ảnh Hiển Thị <span class="text-red">*</span></label>
           <div class="upload-image text-center">
-            <div title="Image Preview" class="image-preview" style="background-image: url('{{ Helper::get_image_product_url() }}'); padding-top: 100%; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 5px; border: 1px solid #f4f4f4;"></div>
+            <div title="Image Preview" class="image-preview" style="background-image: url('{{ Helpers::get_image_product_url() }}'); padding-top: 100%; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 5px; border: 1px solid #f4f4f4;"></div>
             <label for="upload" title="Upload Image" class="btn btn-primary btn-sm"><i class="fa fa-folder-open"></i>Chọn Hình Ảnh</label>
             <input type="file" accept="image/*" id="upload" style="display:none" name="image" required>
           </div>
@@ -103,18 +102,17 @@
                 <input type="text" name="sku_code" class="form-control" id="sku_code" placeholder="Mã sản Phẩm" required autocomplete="off">
               </div>
             </div>
-           <div class="col-md-4">
-  <div class="form-group">
-    <label>Hãng Sản Xuất <span class="text-red">*</span></label>
-    <select class="form-control" name="producer_id">
-      <option value="">-- Chọn hãng sản xuất --</option>
-      @foreach ($producers as $producer)
-        <option value="{{ $producer->id }}">{{ $producer->name }}</option>
-      @endforeach
-    </select>
-  </div>
-</div>
-
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Hãng Sản Xuất <span class="text-red">*</span></label>
+                <select class="form-control" name="producer_id" required>
+                  <option value="">-- Chọn hãng sản xuất --</option>
+                  @foreach($producers as $producer)
+                    <option value="{{ $producer->id }}">{{ $producer->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
           </div>
           <div class="row">
             <div class="col-md-4">
@@ -234,7 +232,7 @@
     <div class="box-body">
       <div class="form-group">
         <button type="submit" class="btn btn-success btn-flat pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Lưu</button>
-        <a href="" class="btn btn-danger btn-flat pull-right" style="margin-right: 5px;"><i class="fa fa-ban" aria-hidden="true"></i> Hủy</a>
+        <a href="{{ route('admin.product.index') }}" class="btn btn-danger btn-flat pull-right" style="margin-right: 5px;"><i class="fa fa-ban" aria-hidden="true"></i> Hủy</a>
       </div>
     </div>
   </div>

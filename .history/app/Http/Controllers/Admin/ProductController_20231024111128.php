@@ -38,9 +38,8 @@ public function index()
         $query->where([['import_quantity', '>', 0], ['quantity', '>', 0]]);
       }
     ])->latest()->get();
-   dd($products);
-    // return view('admin.product.index')->with(['products' => $products, 'producers' => $producers]);
-
+//    debug
+    dd($products);
 }
 
 
@@ -115,10 +114,7 @@ public function index()
   public function new(Request $request)
   {
     $producers = Producer::select('id', 'name')->orderBy('name', 'asc')->get();
-    // dd($producers);
-
     return view('admin.main')->with('producers', $producers);
-
   }
 
   public function save(Request $request)

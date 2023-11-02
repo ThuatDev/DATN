@@ -103,18 +103,17 @@
                 <input type="text" name="sku_code" class="form-control" id="sku_code" placeholder="Mã sản Phẩm" required autocomplete="off">
               </div>
             </div>
-           <div class="col-md-4">
-  <div class="form-group">
-    <label>Hãng Sản Xuất <span class="text-red">*</span></label>
-    <select class="form-control" name="producer_id">
-      <option value="">-- Chọn hãng sản xuất --</option>
-      @foreach ($producers as $producer)
-        <option value="{{ $producer->id }}">{{ $producer->name }}</option>
-      @endforeach
-    </select>
-  </div>
-</div>
-
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Hãng Sản Xuất <span class="text-red">*</span></label>
+                <select class="form-control" name="producer_id" required>
+                  <option value="">-- Chọn hãng sản xuất --</option>
+                  @foreach($producers as $producer)
+                    <option value="{{ $producer->id }}">{{ $producer->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
           </div>
           <div class="row">
             <div class="col-md-4">
@@ -234,7 +233,7 @@
     <div class="box-body">
       <div class="form-group">
         <button type="submit" class="btn btn-success btn-flat pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Lưu</button>
-        <a href="" class="btn btn-danger btn-flat pull-right" style="margin-right: 5px;"><i class="fa fa-ban" aria-hidden="true"></i> Hủy</a>
+        <a href="{{ route('admin.product.index') }}" class="btn btn-danger btn-flat pull-right" style="margin-right: 5px;"><i class="fa fa-ban" aria-hidden="true"></i> Hủy</a>
       </div>
     </div>
   </div>

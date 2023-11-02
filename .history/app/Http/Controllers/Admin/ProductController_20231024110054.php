@@ -7,23 +7,18 @@ use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\View;
+
 use App\Models\Product;
 use App\Models\Producer;
 use App\Models\Promotion;
 use App\Models\ProductDetail;
 use App\Models\ProductImage;
 use App\Models\OrderDetail;
+
 class ProductController extends Controller
 {
-    public function boot()
-{
-    $producers = Producer::all();
-    View::share('producers', $producers);
-}
-public function index()
-{
-    $producers = Producer::all();
+  public function index()
+  {
     $products = Product::select('id', 'producer_id', 'name', 'image', 'sku_code', 'OS', 'rate', 'created_at')
     ->whereHas('product_details', function (Builder $query) {
       $query->where('import_quantity', '>', 0);
@@ -38,12 +33,8 @@ public function index()
         $query->where([['import_quantity', '>', 0], ['quantity', '>', 0]]);
       }
     ])->latest()->get();
-   dd($products);
-    // return view('admin.product.index')->with(['products' => $products, 'producers' => $producers]);
-
-}
-
-
+    return view('admin.home')->with('products', $products);
+  }
 
   public function delete(Request $request)
   {
@@ -115,10 +106,7 @@ public function index()
   public function new(Request $request)
   {
     $producers = Producer::select('id', 'name')->orderBy('name', 'asc')->get();
-    // dd($producers);
-
     return view('admin.main')->with('producers', $producers);
-
   }
 
   public function save(Request $request)

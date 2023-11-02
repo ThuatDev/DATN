@@ -39,7 +39,7 @@ public function index()
       }
     ])->latest()->get();
    dd($products);
-    // return view('admin.product.index')->with(['products' => $products, 'producers' => $producers]);
+    return view('admin.product.index')->with(['products' => $products, 'producers' => $producers]);
 
 }
 
@@ -116,7 +116,6 @@ public function index()
   {
     $producers = Producer::select('id', 'name')->orderBy('name', 'asc')->get();
     // dd($producers);
-
     return view('admin.main')->with('producers', $producers);
 
   }
