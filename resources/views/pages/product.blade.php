@@ -1,30 +1,22 @@
+
 @extends('layouts.master')
 
 @section('title', $data['product']->name)
 
 @section('content')
+<style>
+    .capacity-option.active {
+    border: 2px solid #007bff; /* Ví dụ: đường viền xanh */
+    background-color: #e7f0ff; /* Ví dụ: nền xanh nhạt */
 
-  <!-- <section class="bread-crumb">
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('home_page') }}">{{ __('header.Home') }}</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('products_page') }}">Sản Phẩm</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('producer_page', ['id' => $data['product']->producer_id]) }}">{{ $data['product']->producer->name }}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{{ $data['product']->name }}</li>
-      </ol>
-    </nav>
-  </section> -->
-<!-- banner  -->
-  <!-- <div class="site-product">
-    <section class="section-advertise">
-      <div class="content-advertise">
-        <div id="slide-advertise" class="owl-carousel">
-          @foreach($data['advertises'] as $advertise)
-            <div class="slide-advertise-inner" style="background-image: url('{{ Helper::get_image_advertise_url($advertise->image) }}');" data-dot="<button>{{ $advertise->title }}</button>"></div>
-          @endforeach
-        </div>
-      </div>
-    </section> -->
+}
+.capacity-option {
+    cursor: pointer;
+}
+
+</style>
+
+
 
     <section class="section-product">
       <div class="section-header">
@@ -92,29 +84,41 @@
                   </div>
                   <div class="color-product">
                      <div class="title">Màu sắc:</div>
-                    <div class="select-color">
-                      <div class="row">
-                        @foreach($data['product_details'] as $key => $product)
-                          <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12 width_lgcol">
-                            <div class="color-inner {{ $key == 0 ? 'active' : '' }}" product-id="{{ $product->id }}" data-key="{{ $key }}" can-buy="{{ $product->quantity > 0 ? '1' : '0'}}" data-qty="{{ $product->quantity }}">
-                              <div class="select-inner">
-                                @if($product->product_images->isNotEmpty())
-                                  <div class="image-color"><img src="{{ Helper::get_image_product_url($product->product_images[0]->image_name) }}"></div>
-                                @else
-                                  <div class="image-color"><img src="{{ Helper::get_image_product_url('not-image.jpg') }}"></div>
-                                @endif
-                                <div class="image-name">{{ $product->color }}</div>
-                              </div>
-                              @if($product->quantity <= 0)
-                              <div class="crossed-out"></div>
-                              @endif
-                              <div class="image-check"><img src="{{ asset('images/select-pro.png') }}"></div>
-                            </div>
-                          </div>
-                        @endforeach
-                      </div>
+                   <div class="select-color color-container">
+    <div class="row">
+      @foreach($data['product_details'] as $key => $product)
+  <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12 width_lgcol">
+ <div class="color-inner {{ $key == 0 ? 'active' : '' }}" data-key="{{ $key }}" product-id="{{ $product->id }}" data-capacity="{{ $product->capacity }}"  can-buy="{{ $product->quantity > 0 ? '1' : '0'}}" data-qty="{{ $product->quantity }}">
+      <div class="select-inner">
+        <div class="image-color"><img src="{{ Helper::get_image_product_url($product->product_images[0]->image_name ?? 'not-image.jpg') }}"></div>
+        <div class="image-name">{{ $product->color }}</div>
+      </div>
+    </div>
+  </div>
+@endforeach
+
+    </div>
+</div>
                     </div>
-                  </div>
+                        {{-- hiển thị ra dung lương trường capacity của bảng product_details  --}}
+
+                           <div class="title">Dung lượng:</div>
+        <div class="row capacity-container">
+
+    @php $displayedCapacity = null; @endphp
+
+    @foreach($data['product_details'] as $key => $product)
+            @if($product->capacity && $product->capacity != $displayedCapacity)
+            <div class="capacity col-md-4 border-dark border-primary">
+              <div class="capacity-option" data-key="{{ $key }}">{{ $product->capacity }}</div>
+            </div>
+                 @endif
+            @php $displayedCapacity = $product->capacity; @endphp
+
+    @endforeach
+</div>
+
+
                   @if($data['product']->promotions->isNotEmpty())
                     <div class="promotions">
                       <div class="title">Khuyến mãi đặc biệt</div>
@@ -126,10 +130,16 @@
                     </div>
                   @endif
 
+
+
+
+
                   <div class="form-payment">
-                    <form action="{{ route('show_checkout') }}" method="POST" accept-charset="utf-8" style="display: flex;
-                    flex-direction: column;">
+                    <form action="{{ route('show_checkout') }}" method="POST" accept-charset="utf-8" cl style="display: flex;
+                    flex-direction: column;" >
                       @csrf
+                      <input type="hidden" id="product-id" name="product_id" value="{{ $data['product_details'][0]->id }}">
+
                       <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 sm-flex">
                         <span class="quanity">Số Lượng:</span>
                         <div class="form-center">
@@ -144,7 +154,7 @@
                         </div>
 
                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 pdd-left">
-                          <button style="width: 175px;" type="button" data-role="addtocart" class="btn btn-lg btn-gray btn-cart btn_buy add_to_cart" data-url="{{ route('add_cart') }}"><span class="txt-main"><i class="fa fa-cart-arrow-down padding-right-10"></i> Thêm Giỏ hàng</span></button>
+                          <button style="width: 175px;" type="button" data-role="addtocart" class="btn btn-add-to-cart btn-lg btn-gray btn-cart btn_buy add_to_cart" data-url="{{ route('add_cart') }}"><span class="txt-main"><i class="fa fa-cart-arrow-down padding-right-10"></i> Thêm Giỏ hàng</span></button>
                         </div>
                       </div>
                     </form>
@@ -377,7 +387,52 @@
   <script src="{{ asset('common/lightslider/dist/js/lightslider.js') }}"></script>
   <script src="{{ asset('js/product.js') }}"></script>
   <script>
-     $(document).ready(function() {
+  $(document).ready(function() {
+ $(document).on('click', '.capacity-option', function () {
+        var capacity = $(this).text().trim();
+        $('.capacity-option').removeClass('active');
+        $(this).addClass('active');
+
+        $('.color-inner').hide();
+        $('.color-inner[data-capacity="' + capacity + '"]').show();
+    });
+
+    // Xử lý khi chọn màu sắc
+    $(document).on('click', '.color-inner', function () {
+        var productId = $(this).data('product-id');
+        $('#product-id').val(productId); // Cập nhật ID sản phẩm vào form
+    });
+
+    // Xử lý khi thêm vào giỏ hàng
+    $('.btn-add-to-cart').on('click', function () {
+        var productId = $('#product-id').val(); // Lấy ID sản phẩm từ form
+        var quantity = $('#qty').val(); // Lấy số lượng
+
+        // Kiểm tra dữ liệu trước khi gửi
+        if (productId && quantity && quantity > 0) {
+            var form = $('#add-to-cart-form');
+            form.submit(); // Gửi form đến server
+        } else {
+            // Hiển thị thông báo lỗi nếu thông tin không đầy đủ
+            // alert('Vui lòng chọn đầy đủ thông tin sản phẩm.');
+        }
+    });
+
+    // Khởi tạo trang với dung lượng đầu tiên
+    $('.capacity-option:first').trigger('click');
+
+    // Debugging - kiểm tra console để xem có lỗi gì xuất hiện không
+    $(document).on('click', '.color-inner', function () {
+        console.log('Màu sắc được chọn:', $(this).find('.image-name').text().trim());
+        console.log('ID sản phẩm:', $(this).data('product-id'));
+    });
+
+    $('.btn-add-to-cart').on('click', function () {
+        console.log('Đã click vào nút Thêm vào giỏ hàng');
+        // Thêm các log khác nếu cần thiết để theo dõi quá trình thực thi
+    });
+
+    // active
 
       $(".section-rating .rating-form form").submit( function(eventObj) {
         $("<input />").attr("type", "hidden")

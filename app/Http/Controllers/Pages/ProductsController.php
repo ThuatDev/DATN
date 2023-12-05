@@ -32,7 +32,7 @@ public function index(Request $request)
     }
 
     $query_products->with(['product_detail' => function ($query) {
-        $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
+        $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date','capacity')->where('quantity', '>', 0)->orderBy('sale_price', 'ASC')
             ->where('quantity', '>', 0)
             ->orderBy('sale_price', 'ASC');
     }]);
@@ -98,7 +98,8 @@ public function index(Request $request)
     }
 
     $query_products->with(['product_detail' => function($query) {
-      $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->where('quantity', '>', 0)->orderBy('sale_price', 'ASC');
+      $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date' ,'capacity')->where('quantity', '>', 0)->orderBy('sale_price', 'ASC')
+      ->where('quantity', '>', 0)->orderBy('sale_price', 'ASC');
     }]);
 
     if($request->has('name') && $request->input('name') != null)
@@ -219,7 +220,7 @@ public function getProduct(Request $request, $slug)
         'product_images' => function ($query) {
             $query->select('id', 'product_detail_id', 'image_name');
         }
-    ])->select('id', 'color', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
+    ])->select('id', 'color', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date', 'capacity')->where('quantity', '>', 0)->orderBy('sale_price', 'ASC')
         ->get();
 
     $suggest_products = Product::select('id','name', 'image', 'rate')
@@ -231,7 +232,7 @@ public function getProduct(Request $request, $slug)
             ['id', '<>', $product->id]
         ])
         ->with(['product_detail' => function($query) {
-            $query->select('id','product_id','color','quantity','sale_price','promotion_price','promotion_start_date','promotion_end_date')
+            $query->select('id','product_id','color','quantity','sale_price','promotion_price','promotion_start_date','promotion_end_date' ,'capacity')->where('quantity', '>', 0)->orderBy('sale_price', 'ASC')
                 ->where('quantity','>',0);
         }])
         ->orderBy('rate','desc')
@@ -258,6 +259,7 @@ public function getProduct(Request $request, $slug)
             'product_details' => $product_details,
             'suggest_products' => $suggest_products,
             'product_votes' => $product_votes
+
         ]
     ]);
 }

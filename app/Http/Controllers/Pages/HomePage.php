@@ -24,7 +24,7 @@ class HomePage extends Controller
   public function __invoke()
   {
 
-    $products = Product::select('id','producer_id','name', 'image','slug', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'rate')
+    $products = Product::select('id','name', 'image','slug', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'rate')
     ->whereHas('product_detail', function (Builder $query) {
         $query->where('quantity', '>', 0);
     })

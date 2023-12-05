@@ -531,12 +531,16 @@
             <input type="text" name="product_details[{?}][color]" class="form-control color" id="color_{?}" placeholder="Mầu sắc" required autocomplete="off">
           </div>
         </div>
+
         <div class="col-md-4">
           <div class="form-group">
             <label for="quantity_{?}">Số Lượng <span class="text-red">*</span></label>
             <input type="number" min="1" name="product_details[{?}][quantity]" class="form-control" id="quantity_{?}" placeholder="Số lượng" required autocomplete="off">
           </div>
+
         </div>
+
+
         <div class="col-md-4">
           <div class="form-group">
             <label for="import_price_{?}">Giá Nhập (VNĐ) <span class="text-red">*</span></label>
@@ -568,6 +572,20 @@
             </div>
           </div>
         </div>
+            <div class="col-md-4">
+            <div class="form-group">
+                <label for="capacity_{?}">Dung Lượng <span class="text-red">*</span></label>
+                <select class="form-control" name="product_details[{?}][capacity]" required>
+                  <option value="">-- Chọn dung lượng --</option>
+                  <option value="64">64</option>
+                  <option value="128">128</option>
+                  <option value="256">256</option>
+                  <option value="512">512</option>
+                  <option value="1T">1T</option>
+                </select>
+
+            </div>
+            </div>
       </div>
       <div class="form-group" style="margin-bottom: 0;">
         <label>Hình Ảnh Chi Tiết <span class="text-red">*</span></label>

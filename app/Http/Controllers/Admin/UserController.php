@@ -81,7 +81,34 @@ class UserController extends Controller
     return response()->json($data, 200);
   }
 
+  public function show($id)
+  {
+    $user = User::select('id', 'name', 'email', 'phone', 'address', 'provider', 'avatar_image', 'active', 'created_at')->where([['id', $id], ['admin', false]])->first();
+    if(!$user) abort(404);
+    $product_votes = ProductVote::where('user_id', $user->id)->with(['product' => function($query) {
+      $query->select('id', 'name', 'image');
+    }])->latest()->get();
 
+    $orders = Order::where('user_id', $user->id)->with([
+      'payment_method' => function($query) {
+        $query->select('id', 'name');
+      },
+      'order_details' => function($query) {
+        $query->select('id', 'order_id', 'product_detail_id', 'quantity', 'price')
+        ->with([
+          'product_detail' => function ($query) {
+            $query->select('id', 'product_id', 'color')
+            ->with([
+              'product' => function ($query) {
+                $query->select('id', 'name', 'image', 'sku_code');
+              }
+            ]);
+          }
+        ]);
+      }
+    ])->latest()->get();
+    return view('admin.user.show')->with(['user' => $user, 'product_votes' => $product_votes, 'orders' => $orders]);
+  }
 
   public function send($id)
   {

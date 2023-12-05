@@ -58,7 +58,10 @@ class User extends Authenticatable
      * @param  string  $token
      * @return void
      */
-
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
 
     /**
      * Send the active account notification.

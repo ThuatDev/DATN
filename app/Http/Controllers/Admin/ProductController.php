@@ -111,70 +111,24 @@ class ProductController extends Controller
     return view('admin.product.new')->with('producers', $producers);
   }
 
-  public function save(Request $request)
-  {
+public function save(Request $request)
+{
     $product = new Product;
 
-    if($request->information_details != null) {
-      //Xử lý Ảnh trong nội dung
-      $information_details = $request->information_details;
+    // Khắc phục lỗi DOMDocument
+    libxml_use_internal_errors(true);
 
-      $dom = new \DomDocument();
+    // Xử lý thông tin chi tiết sản phẩm
+    if ($request->information_details != null) {
+        $information_details = $request->information_details;
 
-      // conver utf-8 to html entities
-      $information_details = mb_convert_encoding($information_details, 'HTML-ENTITIES', "UTF-8");
+        $dom = new \DomDocument();
+        $information_details = mb_convert_encoding($information_details, 'HTML-ENTITIES', "UTF-8");
+        $dom->loadHtml($information_details, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
-      $dom->loadHtml($information_details, LIBXML_HTML_NODEFDTD);
-
-      $images = $dom->getElementsByTagName('img');
-
-      foreach($images as $k => $img){
-
-          $data = $img->getAttribute('src');
-
-          if(Str::containsAll($data, ['data:image', 'base64'])){
-
-              list(, $type) = explode('data:image/', $data);
-              list($type, ) = explode(';base64,', $type);
-
-              list(, $data) = explode(';base64,', $data);
-
-              $data = base64_decode($data);
-
-              $image_name = time().$k.'_'.Str::random(8).'.'.$type;
-
-              Storage::disk('public')->put('images/posts/'.$image_name, $data);
-
-              $img->removeAttribute('src');
-              $img->setAttribute('src', '/storage/images/posts/'.$image_name);
-          }
-      }
-
-      $information_details = $dom->saveHTML();
-
-      //conver html-entities to utf-8
-      $information_details = mb_convert_encoding($information_details, "UTF-8", 'HTML-ENTITIES');
-
-      //get content
-      list(, $information_details) = explode('<html><body>', $information_details);
-      list($information_details, ) = explode('</body></html>', $information_details);
-
-      $product->information_details = $information_details;
-    }
-    if($request->product_introduction != null) {
-      //Xử lý Ảnh trong nội dung
-      $product_introduction = $request->product_introduction;
-
-      $dom = new \DomDocument();
-
-      // conver utf-8 to html entities
-      $product_introduction = mb_convert_encoding($product_introduction, 'HTML-ENTITIES', "UTF-8");
-
-      $dom->loadHtml($product_introduction, LIBXML_HTML_NODEFDTD);
-
-      $images = $dom->getElementsByTagName('img');
-
-      foreach($images as $k => $img){
+        // Xử lý ảnh trong nội dung
+        $images = $dom->getElementsByTagName('img');
+        foreach($images as $k => $img){
 
           $data = $img->getAttribute('src');
 
@@ -196,18 +150,56 @@ class ProductController extends Controller
           }
       }
 
-      $product_introduction = $dom->saveHTML();
+        $information_details = $dom->saveHTML();
+        $information_details = mb_convert_encoding($information_details, "UTF-8", 'HTML-ENTITIES');
+        list($information_details) = explode('<html><body>', $information_details);
+        list($information_details ) = explode('</body></html>', $information_details);
 
-      //conver html-entities to utf-8
-      $product_introduction = mb_convert_encoding($product_introduction, "UTF-8", 'HTML-ENTITIES');
-
-      //get content
-      list(, $product_introduction) = explode('<html><body>', $product_introduction);
-      list($product_introduction, ) = explode('</body></html>', $product_introduction);
-
-      $product->product_introduction = $product_introduction;
+        $product->information_details = $information_details;
     }
-   $product->slug = Str::slug($request->name);
+
+    // Xử lý giới thiệu sản phẩm
+    if ($request->product_introduction != null) {
+        $product_introduction = $request->product_introduction;
+
+        $dom = new \DomDocument();
+        $product_introduction = mb_convert_encoding($product_introduction, 'HTML-ENTITIES', "UTF-8");
+        $dom->loadHtml($product_introduction, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
+        // Xử lý ảnh trong nội dung
+        $images = $dom->getElementsByTagName('img');
+           foreach($images as $k => $img){
+
+          $data = $img->getAttribute('src');
+
+          if(Str::containsAll($data, ['data:image', 'base64'])){
+
+              list(, $type) = explode('data:image/', $data);
+              list($type, ) = explode(';base64,', $type);
+
+              list(, $data) = explode(';base64,', $data);
+
+              $data = base64_decode($data);
+
+              $image_name = time().$k.'_'.Str::random(8).'.'.$type;
+
+              Storage::disk('public')->put('images/posts/'.$image_name, $data);
+
+              $img->removeAttribute('src');
+              $img->setAttribute('src', '/storage/images/posts/'.$image_name);
+          }
+      }
+
+        $product_introduction = $dom->saveHTML();
+        $product_introduction = mb_convert_encoding($product_introduction, "UTF-8", 'HTML-ENTITIES');
+        list( $product_introduction) = explode('<html><body>', $product_introduction);
+        list($product_introduction ) = explode('</body></html>', $product_introduction);
+
+        $product->product_introduction = $product_introduction;
+    }
+
+    // Thiết lập các thuộc tính cơ bản của sản phẩm
+    $product->slug = Str::slug($request->name);
     $product->name = $request->name;
     $product->producer_id = $request->producer_id;
     $product->sku_code = $request->sku_code;
@@ -222,17 +214,19 @@ class ProductController extends Controller
     $product->pin = $request->pin;
     $product->rate = 5.0;
 
-    if($request->hasFile('image')){
-      $image = $request->file('image');
-      $image_name = time().'_'.Str::random(8).'_'.$image->getClientOriginalName();
-      $image->storeAs('images/products',$image_name,'public');
-      $product->image = $image_name;
+    // Xử lý ảnh sản phẩm
+    if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        $image_name = time().'_'.Str::random(8).'_'.$image->getClientOriginalName();
+        $image->storeAs('images/products', $image_name, 'public');
+        $product->image = $image_name;
     }
 
     $product->save();
 
+    // Xử lý khuyến mãi
     if ($request->has('product_promotions')) {
-      foreach ($request->product_promotions as $product_promotion) {
+        foreach ($request->product_promotions as $product_promotion) {
         $promotion = new Promotion;
         $promotion->product_id = $product->id;
         $promotion->content = $product_promotion['content'];
@@ -253,12 +247,16 @@ class ProductController extends Controller
       }
     }
 
+    // Xử lý chi tiết sản phẩm
     if ($request->has('product_details')) {
       foreach ($request->product_details as $key => $product_detail) {
         $new_product_detail = new ProductDetail;
         $new_product_detail->product_id = $product->id;
         $new_product_detail->color = $product_detail['color'];
         $new_product_detail->import_quantity = $product_detail['quantity'];
+        // thêm capacity
+        $new_product_detail->capacity = $product_detail['capacity'];
+
         $new_product_detail->quantity = $product_detail['quantity'];
         $new_product_detail->import_price = str_replace('.', '', $product_detail['import_price']);
         $new_product_detail->sale_price = str_replace('.', '', $product_detail['sale_price']);
@@ -294,13 +292,13 @@ class ProductController extends Controller
       }
     }
 
+    // Chuyển hướng với thông báo thành công
     return redirect()->route('admin.product.index')->with(['alert' => [
-      'type' => 'success',
-      'title' => 'Thành Công',
-      'content' => 'Thêm sản phẩm thành công.'
+        'type' => 'success',
+        'title' => 'Thành Công',
+        'content' => 'Thêm sản phẩm thành công.'
     ]]);
-  }
-
+}
   public function edit($id)
   {
     $producers = Producer::select('id', 'name')->orderBy('name', 'asc')->get();
@@ -312,7 +310,7 @@ class ProductController extends Controller
         $query->select('id', 'product_id', 'content', 'start_date', 'end_date');
       },
       'product_details' => function ($query) {
-        $query->select('id', 'product_id', 'color', 'import_quantity', 'import_price', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->where('import_quantity', '>', 0)
+        $query->select('id', 'product_id', 'color', 'import_quantity', 'import_price', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date','capacity')->where('import_quantity', '>', 0)
         ->with([
           'product_images' => function ($query) {
             $query->select('id', 'product_detail_id', 'image_name');
@@ -327,26 +325,25 @@ class ProductController extends Controller
     return view('admin.product.edit')->with(['product' => $product, 'producers' =>$producers]);
   }
 
-  public function update(Request $request, $id) {
-
+  public function update(Request $request, $id)
+{
     $product = Product::whereHas('product_details', function (Builder $query) {
-      $query->where('import_quantity', '>', 0);
+        $query->where('import_quantity', '>', 0);
     })->where('id', $id)->first();
+
     if(!$product) abort(404);
 
+    libxml_use_internal_errors(true); // Bỏ qua lỗi cú pháp XML
+
     if($request->information_details != null) {
-      //Xử lý Ảnh trong nội dung
-      $information_details = $request->information_details;
+        $information_details = $request->information_details;
 
-      $dom = new \DomDocument();
+        $dom = new \DomDocument();
+        $information_details = mb_convert_encoding($information_details, 'HTML-ENTITIES', "UTF-8");
+        $dom->loadHtml($information_details, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
-      // conver utf-8 to html entities
-      $information_details = mb_convert_encoding($information_details, 'HTML-ENTITIES', "UTF-8");
-
-      $dom->loadHtml($information_details, LIBXML_HTML_NODEFDTD);
-
-      $images = $dom->getElementsByTagName('img');
-
+        // Xử lý ảnh trong nội dung
+        $images = $dom->getElementsByTagName('img');
       foreach($images as $k => $img){
 
           $data = $img->getAttribute('src');
@@ -369,17 +366,12 @@ class ProductController extends Controller
           }
       }
 
-      $information_details = $dom->saveHTML();
-
-      //conver html-entities to utf-8
-      $information_details = mb_convert_encoding($information_details, "UTF-8", 'HTML-ENTITIES');
-
-      //get content
-      list(, $information_details) = explode('<html><body>', $information_details);
-      list($information_details, ) = explode('</body></html>', $information_details);
-
-      $product->information_details = $information_details;
+        $information_details = mb_convert_encoding($dom->saveHTML(), "UTF-8", 'HTML-ENTITIES');
+        list( $information_details) = explode('<html><body>', $information_details);
+        list($information_details ) = explode('</body></html>', $information_details);
+        $product->information_details = $information_details;
     }
+
     if($request->product_introduction != null) {
       //Xử lý Ảnh trong nội dung
       $product_introduction = $request->product_introduction;
@@ -495,7 +487,37 @@ class ProductController extends Controller
       }
     }
 
+    if ($request->has('old_product_details')) {
+      foreach ($request->old_product_details as $key => $product_detail) {
+        $sum = OrderDetail::where('product_detail_id', $key)->sum('quantity');
+        $old_product_detail = ProductDetail::where('id', $key)->first();
+        if(!$old_product_detail) abort(404);
 
+        $old_product_detail->color = $product_detail['color'];
+        $old_product_detail->import_quantity = $product_detail['quantity'];
+        $old_product_detail->quantity = $product_detail['quantity'] - $sum;
+        $old_product_detail->import_price = str_replace('.', '', $product_detail['import_price']);
+        $old_product_detail->sale_price = str_replace('.', '', $product_detail['sale_price']);
+        if($product_detail['promotion_price'] != null) {
+          $old_product_detail->promotion_price = str_replace('.', '', $product_detail['promotion_price']);
+        }
+        if($product_detail['promotion_date'] != null) {
+          //Xử lý ngày bắt đầu, ngày kết thúc
+          list($start_date, $end_date) = explode(' - ', $product_detail['promotion_date']);
+
+          $start_date = str_replace('/', '-', $start_date);
+          $start_date = date('Y-m-d', strtotime($start_date));
+
+          $end_date = str_replace('/', '-', $end_date);
+          $end_date = date('Y-m-d', strtotime($end_date));
+
+          $old_product_detail->promotion_start_date = $start_date;
+          $old_product_detail->promotion_end_date = $end_date;
+        }
+
+        $old_product_detail->save();
+      }
+    }
 
     if ($request->has('product_details')) {
       foreach ($request->product_details as $key => $product_detail) {
