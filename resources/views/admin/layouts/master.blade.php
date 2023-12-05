@@ -24,6 +24,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="{{ asset('AdminLTE/bower_components/Ionicons/css/ionicons.min.css') }}">
   <!-- Sweet Alert 2 -->
   <link rel="stylesheet" href="{{ asset('common/css/sweetalert2.min.css') }}">
+  <link rel="stylesheet" href={{ asset('css/sidebar.css') }}>
   <!-- Embed CSS -->
   @yield('embed-css')
   <!-- Theme style -->

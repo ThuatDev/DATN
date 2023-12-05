@@ -38,39 +38,7 @@
  <h2>Add New Product</h2>
 
 <!-- Button to trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newProductModal">
-    Add Product
-</button>
 
-<!-- Modal -->
-<div class="modal fade" id="newProductModal" tabindex="-1" role="dialog" aria-labelledby="newProductModalLabel" aria-hidden="true">
-    <!-- ... modal content ... -->
-    <div class="modal-body">
-        <!-- Form for adding new product -->
-        <!-- Add buttons to select type -->
-        <button class="btn btn-info" onclick="changeProductType('phone')">Phone</button>
-        <button class="btn btn-info" onclick="changeProductType('watch')">Watch</button>
-        <button class="btn btn-info" onclick="changeProductType('accessory')">Accessory</button>
-
-        @if($type == 'phone')
-            @include('admin.product.create_phone')
-        @elseif($type == 'watch')
-            @include('admin.product.create_watch')
-        @elseif($type == 'accessory')
-            @include('admin.product.create_accessory')
-        @else
-            <p>Invalid product type</p>
-        @endif
-
-        <!-- Add ID to the form -->
-        <form id="newProductForm" data-url="{}" method="post">
-            @csrf
-            <input type="hidden" name="type" id="productType" value="{{ $type }}">
-            <!-- Other form fields go here -->
-            <button type="submit" class="btn btn-primary">Add Product</button>
-        </form>
-    </div>
-</div>
 
 <script>
     function changeProductType(newType) {
@@ -122,14 +90,16 @@
             <input type="file" accept="image/*" id="upload" style="display:none" name="image" required>
           </div>
         </div>
-          {{-- danh muc  --}}
+        {{-- danh muc  --}}
       <input type="hidden" name="defaultCategory" value="{{ $defaultCategory }}">
         {{-- dd ra cho tôi  --}}
+
 
         <div class="col-md-9">
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
+
                 <label for="name">Tên Sản Phẩm <span class="text-red">*</span></label>
                 <input type="text" name="name" class="form-control" id="name" placeholder="Tên sản Phẩm" required autocomplete="off">
               </div>
@@ -140,7 +110,7 @@
                 <input type="text" name="sku_code" class="form-control" id="sku_code" placeholder="Mã sản Phẩm" required autocomplete="off">
               </div>
             </div>
-            <div class="col-md-4">
+            {{-- <div class="col-md-4">
               <div class="form-group">
                 <label>Hãng Sản Xuất <span class="text-red">*</span></label>
                 <select class="form-control" name="producer_id" required>
@@ -150,9 +120,9 @@
                   @endforeach
                 </select>
               </div>
-            </div>
+            </div> --}}
           </div>
-          <div class="row">
+          {{-- <div class="row">
             <div class="col-md-4">
               <div class="form-group">
                 <label for="monitor">Màn Hình <span class="text-red">*</span></label>
@@ -216,7 +186,7 @@
                 <input type="text" name="pin" class="form-control" id="pin" placeholder="Pin" required autocomplete="off">
               </div>
             </div>
-          </div>
+          </div> --}}
         </div>
       </div>
     </div>

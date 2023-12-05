@@ -52,7 +52,16 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::post('promotion/delete', 'Admin\ProductController@delete_promotion')->name('product.delete_promotion');
     Route::post('product_detail/delete', 'Admin\ProductController@delete_product_detail')->name('product.delete_product_detail');
     Route::post('product/image/delete', 'Admin\ProductController@delete_image')->name('product.delete_image');
-
+    // khai báo 3 router này
+        // @include('admin.product.create_phone')
+        //             @elseif($selectedType == 'watch')
+        //                 @include('admin.product.create_watch')
+        //             @elseif($selectedType == 'accessory')
+        //                 @include('admin.product.create_accessory')
+    // trong file create.blade.php
+    Route::get('product/create_phone', 'Admin\ProductController@create_phone')->name('product.create_phone');
+    Route::get('product/create_watch', 'Admin\ProductController@create_watch')->name('product.create_watch');
+    Route::get('product/create_accessory', 'Admin\ProductController@create_accessory')->name('product.create_accessory');
     // Orders
     Route::get('orders', 'Admin\OrderController@index')->name('order.index');
     Route::get('order/{id}/show', 'Admin\OrderController@show')->name('order.show');

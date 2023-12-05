@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 // thêm use Str
 
-
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\Producer;
 use App\Models\Promotion;
@@ -19,24 +19,37 @@ use App\Models\OrderDetail;
 
 class ProductController extends Controller
 {
-  public function index()
-  {
+// Trong hàm index của controller
+public function index(Request $request)
+{
+    // Lấy danh sách products với thông tin từ category
     $products = Product::select('id', 'producer_id', 'name', 'slug','image', 'sku_code', 'OS', 'rate', 'created_at')
-    ->whereHas('product_details', function (Builder $query) {
-      $query->where('import_quantity', '>', 0);
-    })
-    ->with([
-      'producer' => function ($query) {
-        $query->select('id', 'name');
-      }
-    ])
-    ->withCount([
-    'product_details' => function (Builder $query) {
-        $query->where([['import_quantity', '>', 0], ['quantity', '>', 0]]);
-      }
-    ])->latest()->get();
-    return view('admin.product.index')->with('products', $products);
-  }
+        ->whereHas('product_details', function ($query) {
+            $query->where('import_quantity', '>', 0);
+        })
+        ->with([
+            'producer' => function ($query) {
+                // Thay đổi để load thông tin từ category
+                $query->select('id', 'category_id')->with('category:id,name');
+            }
+        ])
+        ->withCount([
+            'product_details' => function ($query) {
+                $query->where([['import_quantity', '>', 0], ['quantity', '>', 0]]);
+            }
+        ])->latest()->get();
+
+    // Lấy danh sách types từ các categories
+    $categories = Category::all();
+    $types = $categories->pluck('name')->toArray();
+
+    $selectedType = $request->input('type');
+
+
+    // dd($selectedType);
+
+    return view('admin.product.index', compact('products', 'types', 'selectedType'));
+}
 
   public function delete(Request $request)
   {
@@ -104,16 +117,56 @@ class ProductController extends Controller
 
     return response()->json($data, 200);
   }
+public function create_phone(Request $request)
+{
+    // Logic xử lý nếu cần
+    return view('admin.product.create_phone');
+}
 
-  public function new(Request $request)
-  {
+public function create_watch(Request $request)
+{
     $producers = Producer::select('id', 'name')->orderBy('name', 'asc')->get();
-    return view('admin.product.new')->with('producers', $producers);
-  }
+    $categories = Category::pluck('name', 'id')->toArray();
+    $defaultCategory = 'Đồng hồ'; // Tên danh mục mặc định nếu không chọn
+
+    // dd ($defaultCategory);
+    return view('admin.product.create_watch', compact('producers', 'categories', 'defaultCategory'));
+}
+
+public function create_accessory(Request $request)
+{
+    // $producers = Producer::select('id', 'name')->orderBy('name', 'asc')->get();
+    $categories = Category::pluck('name', 'id')->toArray();
+    $defaultCategory = 'Phụ kiện'; // Tên danh mục mặc định nếu không chọn
+
+    // dd ($defaultCategory);
+    return view('admin.product.create_accessory', compact( 'categories', 'defaultCategory'));
+}
+
+public function new(Request $request)
+{
+    $producers = Producer::select('id', 'name')->orderBy('name', 'asc')->get();
+    $type = $request->input('type', 'default_type');
+    // Mặc định giá trị nếu không có giá trị được truyền
+
+    // Dựa vào điều kiện nào đó, chọn một trong những view để trả về
+    // if ($type == 'watch') {
+    //     return view('admin.product.create_watch', compact('type', 'producers'));
+    // } else {
+    //     return view('admin.product.new', compact('type', 'producers'));
+    // }
+        $defaultCategory = 'Điện thoại' ;
+
+    return view('admin.product.new', compact('type', 'producers', 'defaultCategory'));
+}
+
 
 public function save(Request $request)
 {
     $product = new Product;
+
+
+    // dd ($watchCategoryId);
 
     // Khắc phục lỗi DOMDocument
     libxml_use_internal_errors(true);
@@ -199,19 +252,61 @@ public function save(Request $request)
     }
 
     // Thiết lập các thuộc tính cơ bản của sản phẩm
+
     $product->slug = Str::slug($request->name);
     $product->name = $request->name;
+// nếu category khác Điện thoại thì không hiện các thông số kỹ thuật dưới đây
+
+
+    // dd ($categoryName);
+    // So sánh với
+        $categories = Category::pluck('name', 'id')->toArray();
+        $defaultCategory = $request->input('defaultCategory');
+        // dd ($defaultCategory);
+        // với <input type="hidden" name="defaultCategory" value="{{ $defaultCategory }}">
+if (in_array($defaultCategory, $categories)) {
+
+    // Nếu category là defaultCategory, thực hiện xử lý cho sản phẩm là đồng hồ
+    // lưu vào trường category_id của bảng products
+    $watchCategoryId = Category::where('name', $defaultCategory)->first()->id;
+    $product->category_id = $watchCategoryId;
     $product->producer_id = $request->producer_id;
     $product->sku_code = $request->sku_code;
-    $product->monitor = $request->monitor;
-    $product->front_camera = $request->front_camera;
-    $product->rear_camera = $request->rear_camera;
-    $product->CPU = $request->CPU;
-    $product->GPU = $request->GPU;
-    $product->RAM = $request->RAM;
-    $product->ROM = $request->ROM;
-    $product->OS = $request->OS;
-    $product->pin = $request->pin;
+    // $product->monitor = $request->monitor;
+    // $product->front_camera = $request->front_camera;
+    // $product->rear_camera = $request->rear_camera;
+    // $product->CPU = $request->CPU;
+    // $product->GPU = $request->GPU;
+    // $product->RAM = $request->RAM;
+    // $product->ROM = $request->ROM;
+    // $product->OS = $request->OS;
+    // $product->pin = $request->pin;
+    // Bạn có thể thêm xử lý khác nếu cần
+} else {
+    // Nếu category khác defaultCategory, thực hiện xử lý cho sản phẩm không phải là đồng hồ
+    // Đánh dấu sản phẩm không phải là đồng hồ
+
+    // Gán các thông số kỹ thuật từ request vào sản phẩm
+    // $product->producer_id = $request->producer_id;
+    // $product->sku_code = $request->sku_code;
+    // $product->monitor = $request->monitor;
+    // $product->front_camera = $request->front_camera;
+    // $product->rear_camera = $request->rear_camera;
+    // $product->CPU = $request->CPU;
+    // $product->GPU = $request->GPU;
+    // $product->RAM = $request->RAM;
+    // $product->ROM = $request->ROM;
+    // $product->OS = $request->OS;
+    // $product->pin = $request->pin;
+
+    // Bạn có thể thêm xử lý khác nếu cần
+}
+
+
+    // Lấy id của category để lưu vào product
+
+
+
     $product->rate = 5.0;
 
     // Xử lý ảnh sản phẩm
@@ -222,7 +317,12 @@ public function save(Request $request)
         $product->image = $image_name;
     }
 
+
+    // dd ($categories);
+    // dd ($product);
+
     $product->save();
+
 
     // Xử lý khuyến mãi
     if ($request->has('product_promotions')) {

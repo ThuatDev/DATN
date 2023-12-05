@@ -60,6 +60,87 @@
 @section('content')
 
   <!-- Main row -->
+  <h2>Add New Product</h2>
+
+
+<!-- Trang admin.product.index.blade.php -->
+
+<!-- Trang admin.product.index.blade.php -->
+
+
+
+<!-- Button to trigger modal -->
+
+{{-- v2  --}}
+{{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newProductModal">
+    Add Product
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="newProductModal" tabindex="-1" role="dialog" aria-labelledby="newProductModalLabel" aria-hidden="true">
+    <!-- ... modal content ... -->
+    <div class="modal-body">
+        <!-- Form for adding new product -->
+        <!-- Add buttons to select type -->
+        <button class="btn btn-info" onclick="changeProductType('phone')">Phone</button>
+        <button class="btn btn-info" onclick="changeProductType('watch')">Watch</button>
+        <button class="btn btn-info" onclick="changeProductType('accessory')">Accessory</button>
+
+        @if($type == 'phone')
+            @include('admin.product.create_phone')
+        @elseif($type == 'watch')
+            @include('admin.product.create_watch')
+        @elseif($type == 'accessory')
+            @include('admin.product.create_accessory')
+        @else
+            <p>Invalid product type</p>
+        @endif
+
+        <!-- Add ID to the form -->
+        <form id="newProductForm" data-url="{}" method="get">
+            @csrf
+            <input type="hidden" name="type" id="productType" value="{{ $type }}">
+            <!-- Other form fields go here -->
+            <button type="submit" class="btn btn-primary">Add Product</button>
+        </form>
+    </div>
+</div>
+
+<script>
+   function changeProductType(newType) {
+        // Change the value of the type input
+        $('#productType').val(newType);
+
+        // Redirect to the corresponding page
+        var url = '/admin/product/form/' + newType;
+        window.location.href = url;
+    }
+
+    // Handle form submission using AJAX
+    $('#newProductForm').submit(function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            success: function(response) {
+                // Close the modal
+                $('#newProductModal').modal('hide');
+
+                // Show success message
+                alert('Product added successfully');
+
+                // You can also redirect to another page after success if needed
+                // window.location.href = '/another-page';
+            },
+            error: function(error) {
+                // Handle errors and show appropriate messages
+                alert('Error adding product: ' + error.responseJSON.message);
+            }
+        });
+    });
+</script> --}}
   <div class="row">
     <div class="col-md-12">
       <div class="box">
@@ -76,9 +157,41 @@
                 <a href="{{ route('admin.product.index') }}" class="btn btn-flat btn-primary" title="Refresh" style="margin-right: 5px;">
                   <i class="fa fa-refresh"></i><span class="hidden-xs"> Refresh</span>
                 </a>
-                <a href="{{ route('admin.product.new') }}" class="btn btn-success btn-flat" title="New Product">
+                {{-- <a href="{{ route('admin.product.new') }}" class="btn btn-success btn-flat" title="New Product">
                   <i class="fa fa-plus" aria-hidden="true"></i><span class="hidden-xs"> New Product</span>
-                </a>
+                </a> --}}
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newProductModal">
+    Add Product
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="newProductModal" tabindex="-1" role="dialog" aria-labelledby="newProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newProductModalLabel">Add New Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Select a product type:</p>
+                <button class="btn btn-info" onclick="submitTypeForm('new')">Điện Thoại</button>
+                <button class="btn btn-info" onclick="submitTypeForm('create_watch')">Đồng Hồ</button>
+                <button class="btn btn-info" onclick="submitTypeForm('create_accessory')">Phụ Kiện</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function submitTypeForm(selectedType) {
+        if (selectedType) {
+            window.location.href = '/admin/product/' + selectedType;
+        }
+    }
+</script>
+
               </div>
             </div>
           </div>
@@ -104,45 +217,44 @@
               {{-- debug xem giá trị trả về  --}}
                 {{-- {{ dd($product) }} --}}
 
-                <tr>
-                  <td class="text-center">
-                    {{ $product->id }}
-                  </td>
-                  <td>
-                    <div style="background-image: url('{{ Helper::get_image_product_url($product->image) }}'); padding-top: 100%; background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
-                  </td>
-                  <td>
-                    #<a class="text-left" href="{{ route('product_page', ['id' => $product->slug]) }}" title="{{ $product->slug }}">{{ $product->sku_code }}</a>
-                  </td>
-                  <td>
+               <tr>
+    <td class="text-center">
+        {{ $product->id ?? '' }}
+    </td>
+    <td>
+        @if ($product->image)
+            <div style="background-image: url('{{ Helper::get_image_product_url($product->image) }}'); padding-top: 100%; background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
+        @endif
+    </td>
+    <td>
+        #<a class="text-left" href="{{ route('product_page', ['id' => $product->slug]) }}" title="{{ $product->slug }}">{{ $product->sku_code ?? '' }}</a>
+    </td>
+    <td>
+        @if ($product->name)
+            <a class="text-left" href="{{ route('product_page', ['id' => $product->slug]) }}" title="{{ $product->name }}">{{ $product->name }}</a>
+        @endif
+    </td>
+    <td>{{ $product->producer->name ?? '' }}</td>
+    <td>{{ $product->OS ?? '' }}</td>
+    <td>{{ $product->rate ? $product->rate . '/5 Điểm' : '' }}</td>
+    <td>{{ $product->created_at ? \Carbon\Carbon::parse($product->created_at)->format('d/m/Y') : '' }}</td>
+    <td>
+        @if ($product->product_details_count > 0)
+            <span class="label-success status-label">Còn Hàng</span>
+        @else
+            <span class="label-danger status-label">Hết Hàng</span>
+        @endif
+    </td>
+    <td>
+        <a href="{{ route('admin.product.edit', ['id' => $product->id]) }}" class="btn btn-icon btn-sm btn-primary tip" title="Chỉnh Sửa">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+        </a>
+        <a href="javascript:void(0);" data-id="{{ $product->id }}" class="btn btn-icon btn-sm btn-danger deleteDialog tip" title="Xóa" data-url="{{ route('admin.product.delete') }}">
+            <i class="fa fa-trash"></i>
+        </a>
+    </td>
+</tr>
 
-                    {{-- <a class="text-left" href="{{ route('product_page', ['id' => $product->id]) }}" title="{{ $product->name }}">{{ $product->name }}</a> --}}
-              {{-- debug xem giá trị trả về  --}}
-
-                    <a class="text-left" href="{{ route('product_page', ['id' => $product->slug]) }}" title="{{ $product->name }}">{{ $product->name }}</a>
-       {{-- <a class="text-left" href="{{ route('product_page', ['slug' => urlencode($product->slug)]) }}" title="{{ $product->slug }}">{{ $product->name }}</a> --}}
-
-                  </td>
-                  <td>{{ $product->producer->name }}</td>
-                  <td>{{ $product->OS }}</td>
-                  <td>{{ $product->rate }}/5 Điểm</td>
-                  <td> {{ \Carbon\Carbon::parse($product->created_at)->format('d/m/Y')}}</td>
-                  <td>
-                    @if($product->product_details_count > 0)
-                      <span class="label-success status-label">Còn Hàng</span>
-                    @else
-                      <span class="label-danger status-label">Hết Hàng</span>
-                    @endif
-                  </td>
-                  <td>
-                    <a href="{{ route('admin.product.edit', ['id' => $product->id]) }}" class="btn btn-icon btn-sm btn-primary tip" title="Chỉnh Sửa">
-                      <i class="fa fa-pencil" aria-hidden="true"></i>
-                    </a>
-                    <a href="javascript:void(0);" data-id="{{ $product->id }}" class="btn btn-icon btn-sm btn-danger deleteDialog tip" title="Xóa" data-url="{{ route('admin.product.delete') }}">
-                      <i class="fa fa-trash"></i>
-                    </a>
-                  </td>
-                </tr>
               @endforeach
             </tbody>
           </table>

@@ -1,35 +1,35 @@
+
+
+
 <aside class="main-sidebar">
 
   <!-- sidebar: style can be found in sidebar.less -->
   <section class="sidebar">
 
     <!-- Sidebar user panel (optional) -->
-    <div class="user-panel">
-      <div class="pull-left image">
-        <img src="{{ Helper::get_image_avatar_url(Auth::user()->avatar_image) }}" class="img-circle" alt="{{ Auth::user()->name }}">
+    {{-- <div class="user-panel">
+      <div class="">
+        <img src="{{ Helper::get_image_avatar_url(Auth::user()->avatar_image) }}" class="avatar" alt="{{ Auth::user()->name }}">
       </div>
-      <div class="pull-left info">
-        <p>{{ Auth::user()->name }}</p>
-        <!-- Status -->
-        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-      </div>
-    </div>
+      <div class="info">
+        <p class="text-dark">{{ Auth::user()->name }}</p>
 
-    <!-- search form (Optional) -->
-    <form action="#" method="get" class="sidebar-form" id="sidebar-search-form">
-      <div class="input-group">
-        <input type="text" name="q" class="form-control" placeholder="Search...">
-        <span class="input-group-btn">
-            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-            </button>
-          </span>
       </div>
-    </form>
-    <!-- /.search form -->
-
+    </div> --}}
+<div class="main-profile text-center mt-5">
+					<div class="image-bx  mx-auto">
+					        <img src="{{ Helper::get_image_avatar_url(Auth::user()->avatar_image) }}" class="avatar" style="display: inline-block;" alt="{{ Auth::user() ->name }}">
+						<a href="javascript:void(0);"></a>
+					</div>
+					<h5 class="name"><span class="font-w400">Hello,</span> wellcome channel</h5>
+					<p class="email text-dark admin"><a href="/cdn-cgi/l/email-protection" class="text-dark admin" data-cfemail="95f8f4e7e4e0f0efefefefd5f8f4fcf9bbf6faf8">{{ Auth::user()->name }}</a></p>
+				</div>
     <!-- Sidebar Menu -->
-    <ul class="sidebar-menu" data-widget="tree">
-      <li class="header">MAIN NAVIGATION</li>
+
+    <ul class="sidebar-menu mt-5" data-widget="tree">
+        <li class="header" id="main-navigation">
+        MAIN NAVIGATION
+        <i class="fa fa-caret-down caret-icon"></i>
       <!-- Optionally, you can add icons to the links -->
       <li class="{{ Helper::check_active(['admin.dashboard']) }}"><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
       <li class="{{ Helper::check_active(['admin.advertise.index', 'admin.advertise.new', 'admin.advertise.edit']) }}"><a href="{{ route('admin.advertise.index') }}"><i class="fa fa-sliders" aria-hidden="true"></i> <span>Quản Lý Quảng Cáo</span></a></li>
@@ -43,3 +43,28 @@
   </section>
   <!-- /.sidebar -->
 </aside>
+ <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script>
+$(document).ready(function () {
+    // Chọn phần tử <li> có id "main-navigation"
+    var $headerItem = $("#main-navigation");
+
+    // Chọn tất cả các phần tử liền sau phần tử <li> có id "main-navigation"
+    var $menuItems = $headerItem.nextAll();
+
+    // Đặt biến trạng thái ban đầu cho biểu tượng
+    var isIconRotated = false;
+
+    // Đặt sự kiện click cho phần tử <li> có id "main-navigation"
+    $headerItem.click(function () {
+        // Sử dụng slideToggle() để sổ ra và thu gọn tất cả các mục liền sau
+        $menuItems.slideToggle();
+
+        // Kiểm tra trạng thái của biểu tượng và xoay nó
+        isIconRotated = !isIconRotated;
+        var $caretIcon = $headerItem.find(".caret-icon");
+        $caretIcon.toggleClass("rotate-icon", isIconRotated);
+    });
+});
+
+</script>

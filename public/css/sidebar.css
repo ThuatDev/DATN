@@ -1,0 +1,99 @@
+.sidebar {
+    background-color: #f8f9fa;
+}
+.main-sidebar {
+    background-color: #f8f9fa !important;
+}
+/* .sidebar > .active {
+    background-color: #eb8153 !important;
+    color: #fff;
+} */
+.skin-red .sidebar-menu > li.active > a {
+    background-color: #e4e3e3 !important;
+    color: #eb8153 !important;
+}
+.skin-red .sidebar-menu > li:hover > a {
+    background-color: #f0efef !important;
+    color: #fff;
+}
+/* cho chữ màu đen  */
+.sidebar-menu > li > a {
+    color: #000 !important  ;
+}
+.user-panel > .info > p {
+    font-weight: 600;
+
+    color: black;
+}
+.avatar {
+    width: 65px;
+    height: 65px;
+    border-radius: 20%;
+    margin-right: 10px;
+    display: block;
+    object-fit: cover;
+}
+.user-panel {
+    /* cho vô giữa  */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+/* css text  */
+
+.main-profile {
+    padding-top: 10px;
+}
+.skin-red .sidebar-menu > li.header {
+    /* color: #4b646f; */
+    /* background: #1a2226; */
+    /* color: var(--primary); */
+
+    box-shadow: none !important;
+    background-color: rgba(235, 129, 83, 0.1) !important;
+    color: #eb8153 !important;
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+.skin-red .main-header .navbar {
+    background-color: #fff !important;
+    /* đỗ bóng  */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.dropdown-toggle {
+    color: #000 !important;
+}
+/* CSS để xoay biểu tượng */
+.rotate-icon {
+    transform: rotate(180deg);
+    transition: transform 0.3s;
+}
+.skin-red .main-header .navbar .sidebar-toggle {
+    color: #000 !important;
+}
+/* CSS cho phần nội dung */
+/* hover  */
+.skin-red .main-header .navbar .sidebar-toggle:hover {
+    background-color: white !important;
+}
+/* icon  */
+/* CSS để xoay biểu tượng */
+.rotate-icon {
+    transform: rotate(180deg);
+    transition: transform 0.3s;
+}
+
+/* CSS để thay đổi trạng thái khi hover */
+.header:hover {
+    cursor: pointer;
+}
+
+.header {
+    position: relative;
+}
+
+.caret-icon {
+    margin-left: 100px;
+}
