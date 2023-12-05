@@ -93,9 +93,7 @@
         {{-- danh muc  --}}
       <input type="hidden" name="defaultCategory" value="{{ $defaultCategory }}">
         {{-- dd ra cho tôi  --}}
-        <?php
-        dd($defaultCategory);
-        ?>
+
         {{--  --}}
 
         <div class="col-md-9">

@@ -26,6 +26,28 @@
     color: #333;
     font-size: 16px;
 }
+.menu-item {
+  /* Add any common styles for menu items here */
+}
+
+.avatar-container {
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+  overflow: hidden;
+  border-radius: 50%;
+  margin-top: 5px;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Prevent image distortion */
+}
+
+.username {
+  /* Add any styles for the username here */
+}
 
 </style>
 
@@ -124,6 +146,16 @@
                 <span class="fas fa-id-card"></span>
                 {{ __('header.Contact') }}</a>
               </li>
+                <li class="menu-item {{ Helper::check_active(['contact_page'])  }}"><a href="{{ route('register') }}" title="{{ __('header.Register') }}">
+                    {{-- class icon so sánh  --}}
+                    <span class="fas fa-code-branch"></span>
+                    {{ __('header.compare') }}</a>
+                  </li>
+                     <li class="menu-item {{Helper::check_active(['contact_page']) }}"><a href="{{ route('register') }}" title="{{ __('header.Register') }}">
+                    {{-- class icon so sánh  --}}
+                    <span class="fas fa-heart"></span>
+                    {{ __('header.favourite') }}</a>
+                  </li>
             </ul>
           </div>
           <div class="accout-menu">
@@ -163,23 +195,35 @@
             @else
               <div class="logged-menu">
                 <ul>
+
                   <li class="menu-item dropdown {{ Helper::check_active(['orders_page', 'order_page', 'show_user', 'edit_user']) }}">
-                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" title="{{ Auth::user()->name }}">
-                      <div class="avatar" style="background-image: url('{{ Helper::get_image_avatar_url(Auth::user()->avatar_image) }}');"></div>
-                    </a>
-                    <ul class="dropdown-menu">
-                      @if(Auth::user()->admin)
-                      <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Quản Lý Website</a></li>
-                      @else
-                      <li class="{{ Helper::check_active(['orders_page', 'order_page']) }}"><a href="{{ route('orders_page') }}"><i class="fas fa-clipboard-list"></i> Quản Lý Đơn Hàng</a></li>
-                      <li class="{{ Helper::check_active(['show_user', 'edit_user']) }}"><a href="{{ route('show_user') }}"><i class="fas fa-user-cog"></i> Quản Lý Tài Khoản</a></li>
-                      @endif
-                      <li><a id="logout" action="#"><i class="fas fa-power-off"></i> {{ __('header.Logout') }}</a></li>
-                    </ul>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
-                  </li>
+
+  <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" title="{{ Auth::user()->name }}">
+
+    <div class="avatar-container" style="margin-left: 5px">
+      <img src="{{ Helper::get_image_avatar_url(Auth::user()->avatar_image) }}" alt="{{ Auth::user()->name }}" class="avatar-img">
+    </div>
+    {{-- lấy ra tên người dùng  --}}
+    <span class="username "
+    style="font-size: 14px !important; color: #333 !important;">
+      {{ Auth::user()->name }}</span>
+  </a>
+
+  <ul class="dropdown-menu">
+    @if(Auth::user()->admin)
+    <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Quản Lý Website</a></li>
+    @else
+    <li class="{{ Helper::check_active(['orders_page', 'order_page']) }}"><a href="{{ route('orders_page') }}"><i class="fas fa-clipboard-list"></i> Quản Lý Đơn Hàng</a></li>
+    <li class="{{ Helper::check_active(['show_user', 'edit_user']) }}"><a href="{{ route('show_user') }}"><i class="fas fa-user-cog"></i> Quản Lý Tài Khoản</a></li>
+    @endif
+    <li><a id="logout" action="#"><i class="fas fa-power-off"></i> {{ __('header.Logout') }}</a></li>
+  </ul>
+  <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+      @csrf
+  </form>
+</li>
+
+
                 </ul>
               </div>
             @endif

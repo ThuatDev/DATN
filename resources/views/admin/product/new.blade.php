@@ -38,69 +38,111 @@
  <h2>Add New Product</h2>
 
 <!-- Button to trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newProductModal">
-    Add Product
-</button>
-
-<!-- Modal -->
 <div class="modal fade" id="newProductModal" tabindex="-1" role="dialog" aria-labelledby="newProductModalLabel" aria-hidden="true">
-    <!-- ... modal content ... -->
-    <div class="modal-body">
-        <!-- Form for adding new product -->
-        <!-- Add buttons to select type -->
-        <button class="btn btn-info" onclick="changeProductType('phone')">Phone</button>
-        <button class="btn btn-info" onclick="changeProductType('watch')">Watch</button>
-        <button class="btn btn-info" onclick="changeProductType('accessory')">Accessory</button>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newProductModalLabel">Add New Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="categoryContent">
+                <p>Select a product type:</p>
 
-        @if($type == 'phone')
-            @include('admin.product.create_phone')
-        @elseif($type == 'watch')
-            @include('admin.product.create_watch')
-        @elseif($type == 'accessory')
-            @include('admin.product.create_accessory')
-        @else
-            <p>Invalid product type</p>
-        @endif
-
-        <!-- Add ID to the form -->
-        <form id="newProductForm" data-url="{}" method="post">
-            @csrf
-            <input type="hidden" name="type" id="productType" value="{{ $type }}">
-            <!-- Other form fields go here -->
-            <button type="submit" class="btn btn-primary">Add Product</button>
-        </form>
+                @foreach ($categories as $categoryId => $categoryName)
+                    <button class="btn btn-info" onclick="submitTypeForm({{ $categoryId }})">{{ $categoryName }}</button>
+                @endforeach
+            </div>
+        </div>
     </div>
 </div>
-
+<div class="modal fade" id="productTypeModal" tabindex="-1" role="dialog" aria-labelledby="productTypeModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="productTypeModalLabel">Chọn loại sản phẩm</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Add your form controls for selecting product type here -->
+        <div class="form-group">
+          <label for="product_type">Loại Sản Phẩm</label>
+          <select class="form-control" id="product_type_modal" required>
+            {{-- Display categories dynamically --}}
+            @foreach ($categories as $categoryId => $categoryName)
+              <option value="{{ $categoryId }}">{{ $categoryName }}</option>
+            @endforeach
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-primary" id="selectProductTypeBtn">Chọn</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="phoneContent" class="product-type-content">
+        <p>This is content for Điện Thoại.</p>
+        <!-- Add your specific fields for Điện Thoại here -->
+      </div>
+        <div id="watchContent" class="product-type-content">
+            <p>This is content for Đồng Hồ.</p>
+            <!-- Add your specific fields for Đồng Hồ here -->
+        </div>
 <script>
-    function changeProductType(newType) {
-        // Change the value of the type input
-        $('#productType').val(newType);
-        // You can redirect to a new page here if needed
+    // Display content for Đồng Hồ by default when the page is loaded
+    $(document).ready(function() {
+        // Show content for Đồng Hồ and hide Điện Thoại
+        $('#watchContent').show();
+        $('#phoneContent').hide();
+    });
+
+    function submitTypeForm(selectedType) {
+        // If no category is selected, show content for Đồng Hồ
+        if (!selectedType) {
+            $('#categoryContent').html($('#watchContent').html());
+
+            // Close the modal (assuming Bootstrap is used for modals)
+            $('#newProductModal').modal('hide');
+            return;
+        }
+
+        // You can make an AJAX request to get the content for the selected category
+        // For simplicity, let's assume you have a variable containing HTML content for each category
+        var categoryContent = getCategoryContent(selectedType);
+
+        // Update the modal body content
+        $('#categoryContent').html(categoryContent);
+
+        // Close the modal (assuming Bootstrap is used for modals)
+        $('#newProductModal').modal('hide');
     }
 
-    // Handle form submission using AJAX
-    $('#newProductForm').submit(function(e) {
-        e.preventDefault();
+    // Example function to get content for a specific category
+    function getCategoryContent(categoryId) {
+        $('.product-type-content').hide();
+        console.log(categoryId);
 
-        $.ajax({
-            type: 'POST',
-            url: $(this).data('url'),
-            data: $(this).serialize(),
-            success: function(response) {
-                // Close the modal
-                $('#newProductModal').modal('hide');
+        // You need to replace this with your actual logic to get content for the selected category
+        // For example, you might make an AJAX request to the server to fetch HTML content
+        if (categoryId === 1) {
+            $('#phoneContent').show();
+        } else if (categoryId === 2) {
+            $('#watchContent').show();
+        } else if (categoryId === 3) {
+            return '<p>Content for Phụ Kiện</p>';
+        } else {
+            $('#phoneContent').show();
 
-                // Show success message
-                alert('Product added successfully');
-            },
-            error: function(error) {
-                // Handle errors and show appropriate messages
-                alert('Error adding product: ' + error.responseJSON.message);
-            }
-        });
-    });
+        }
+    }
 </script>
+
+
 
 <form id="productForm" action="{{ route('admin.product.save') }}" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
   @csrf
@@ -123,7 +165,7 @@
           </div>
         </div>
           {{-- danh muc  --}}
-      <input type="hidden" name="defaultCategory" value="{{ $defaultCategory }}">
+      {{-- <input type="hidden" name="defaultCategory" value="{{ $defaultCategory }}"> --}}
         {{-- dd ra cho tôi  --}}
 
         <div class="col-md-9">
@@ -582,6 +624,10 @@
       }
     });
   });
+    $(document).ready(function () {
+        // Hiển thị modal khi trang được load
+        $('#newProductModal').modal('show');
+    });
 </script>
 <script type="text/template" id="product-detail">
 <div class="field-group">

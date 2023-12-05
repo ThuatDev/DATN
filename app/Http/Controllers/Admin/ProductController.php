@@ -146,7 +146,9 @@ public function create_accessory(Request $request)
 public function new(Request $request)
 {
     $producers = Producer::select('id', 'name')->orderBy('name', 'asc')->get();
-    $type = $request->input('type', 'default_type');
+
+      $categories = Category::pluck('name', 'id')->toArray();
+
     // Mặc định giá trị nếu không có giá trị được truyền
 
     // Dựa vào điều kiện nào đó, chọn một trong những view để trả về
@@ -155,9 +157,10 @@ public function new(Request $request)
     // } else {
     //     return view('admin.product.new', compact('type', 'producers'));
     // }
-        $defaultCategory = 'Điện thoại' ;
 
-    return view('admin.product.new', compact('type', 'producers', 'defaultCategory'));
+
+        // dd ($categories);
+    return view('admin.product.new', compact( 'producers', 'categories'));
 }
 
 
