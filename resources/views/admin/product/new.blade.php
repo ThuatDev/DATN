@@ -85,14 +85,14 @@
     </div>
   </div>
 </div>
-<div id="phoneContent" class="product-type-content">
+{{-- <div id="phoneContent" class="product-type-content">
         <p>This is content for Điện Thoại.</p>
         <!-- Add your specific fields for Điện Thoại here -->
       </div>
         <div id="watchContent" class="product-type-content">
             <p>This is content for Đồng Hồ.</p>
             <!-- Add your specific fields for Đồng Hồ here -->
-        </div>
+        </div> --}}
 <script>
     // Display content for Đồng Hồ by default when the page is loaded
     $(document).ready(function() {
@@ -101,27 +101,32 @@
         $('#phoneContent').hide();
     });
 
-    function submitTypeForm(selectedType) {
-        // If no category is selected, show content for Đồng Hồ
-        if (!selectedType) {
-            $('#categoryContent').html($('#watchContent').html());
+function submitTypeForm(selectedType) {
+    // Nếu không có danh mục nào được chọn, hiển thị nội dung cho Đồng Hồ
+    if (!selectedType) {
+        $('#categoryContent').html($('#watchContent').html());
 
-            // Close the modal (assuming Bootstrap is used for modals)
-            $('#newProductModal').modal('hide');
-            return;
-        }
+        // Đặt giá trị cho trường input ẩn là danh mục mặc định (ví dụ, 2 cho Đồng Hồ)
+        $('#selectedCategory').val(2);
 
-        // You can make an AJAX request to get the content for the selected category
-        // For simplicity, let's assume you have a variable containing HTML content for each category
-        var categoryContent = getCategoryContent(selectedType);
-
-        // Update the modal body content
-        $('#categoryContent').html(categoryContent);
-
-        // Close the modal (assuming Bootstrap is used for modals)
+        // Đóng modal (giả sử bạn đang sử dụng Bootstrap cho modal)
         $('#newProductModal').modal('hide');
+        return;
     }
 
+    // Bạn có thể thực hiện một yêu cầu AJAX để lấy nội dung cho danh mục đã chọn
+    // Để đơn giản, giả sử bạn có một biến chứa nội dung HTML cho mỗi danh mục
+    var categoryContent = getCategoryContent(selectedType);
+
+    // Cập nhật nội dung modal
+    $('#categoryContent').html(categoryContent);
+
+    // Đặt giá trị cho trường input ẩn là danh mục đã chọn
+    $('#selectedCategory').val(selectedType);
+
+    // Đóng modal (giả sử bạn đang sử dụng Bootstrap cho modal)
+    $('#newProductModal').modal('hide');
+}
     // Example function to get content for a specific category
     function getCategoryContent(categoryId) {
         $('.product-type-content').hide();
@@ -146,6 +151,10 @@
 
 <form id="productForm" action="{{ route('admin.product.save') }}" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
   @csrf
+{{-- $selectedCategory = $request->input('selectedCategory'); --}}
+  <input type="hidden" name="selectedCategory" id="selectedCategory" value="">
+
+
   <div class="box box-primary">
     <div class="box-header">
       <h3 class="box-title">Thông Tin Sản Phẩm</h3>
@@ -194,7 +203,7 @@
               </div>
             </div>
           </div>
-          <div class="row">
+          {{-- <div class="row">
             <div class="col-md-4">
               <div class="form-group">
                 <label for="monitor">Màn Hình <span class="text-red">*</span></label>
@@ -213,20 +222,29 @@
                 <input type="text" name="rear_camera" class="form-control" id="rear_camera" placeholder="Camera sau" required autocomplete="off">
               </div>
             </div>
-          </div>
+          </div> --}}
+
           <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Hệ Điều Hành <span class="text-red">*</span></label>
-                <select class="form-control" name="OS" required>
-                  <option value="">-- Chọn hệ điều hành --</option>
-                  <option value="Android">Android</option>
-                  <option value="IOS">IOS</option>
-                  <option value="Windows Phone">Windows Phone</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-4">
+            {{-- nếu là phụ kiện và thì hiển thị ra dung lượng --}}
+
+        {{-- <div id="phoneContent" class="product-type-content">
+        <p>This is content for Điện Thoại.</p>
+        <!-- Add your specific fields for Điện Thoại here -->
+      </div> --}}
+    <div class="col-md-4">
+        <div class="form-group product-type-content " id="phoneContent"  >
+            <label>Hệ Điều Hành <span class="text-red">*</span></label>
+            <select class="form-control" name="OS" >
+                <option value="">-- Chọn hệ điều hành --</option>
+                <option value="Android">Android</option>
+                <option value="IOS">IOS</option>
+                <option value="Windows Phone">Windows Phone</option>
+            </select>
+        </div>
+    </div>
+
+
+            {{-- <div class="col-md-4">
               <div class="form-group">
                 <label for="CPU">CPU <span class="text-red">*</span></label>
                 <input type="text" name="CPU" class="form-control" id="CPU" placeholder="CPU" required autocomplete="off">
@@ -237,9 +255,9 @@
                 <label for="GPU">GPU <span class="text-red">*</span></label>
                 <input type="text" name="GPU" class="form-control" id="GPU" placeholder="GPU" required autocomplete="off">
               </div>
-            </div>
+            </div> --}}
           </div>
-          <div class="row">
+          {{-- <div class="row">
             <div class="col-md-4">
               <div class="form-group">
                 <label for="RAM">RAM (GB) <span class="text-red">*</span></label>
@@ -258,7 +276,7 @@
                 <input type="text" name="pin" class="form-control" id="pin" placeholder="Pin" required autocomplete="off">
               </div>
             </div>
-          </div>
+          </div> --}}
         </div>
       </div>
     </div>
@@ -688,10 +706,11 @@
             </div>
           </div>
         </div>
+
             <div class="col-md-4">
             <div class="form-group">
                 <label for="capacity_{?}">Dung Lượng <span class="text-red">*</span></label>
-                <select class="form-control" name="product_details[{?}][capacity]" required>
+                <select class="form-control" name="product_details[{?}][capacity]" >
                   <option value="">-- Chọn dung lượng --</option>
                   <option value="64">64</option>
                   <option value="128">128</option>

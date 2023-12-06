@@ -149,14 +149,6 @@ public function new(Request $request)
 
       $categories = Category::pluck('name', 'id')->toArray();
 
-    // Mặc định giá trị nếu không có giá trị được truyền
-
-    // Dựa vào điều kiện nào đó, chọn một trong những view để trả về
-    // if ($type == 'watch') {
-    //     return view('admin.product.create_watch', compact('type', 'producers'));
-    // } else {
-    //     return view('admin.product.new', compact('type', 'producers'));
-    // }
 
 
         // dd ($categories);
@@ -258,52 +250,95 @@ public function save(Request $request)
 
     $product->slug = Str::slug($request->name);
     $product->name = $request->name;
+    // dd ($product->name);
 // nếu category khác Điện thoại thì không hiện các thông số kỹ thuật dưới đây
 
 
     // dd ($categoryName);
     // So sánh với
-        $categories = Category::pluck('name', 'id')->toArray();
+        // $categories = Category::pluck('name', 'id')->toArray();
         $defaultCategory = $request->input('defaultCategory');
-        // dd ($defaultCategory);
-        // với <input type="hidden" name="defaultCategory" value="{{ $defaultCategory }}">
-if (in_array($defaultCategory, $categories)) {
+        // // dd ($defaultCategory);
+        // // với <input type="hidden" name="defaultCategory" value="{{ $defaultCategory }}">
+        // $selectedCategory = $request->input('selectedCategory');
+        // dd ($selectedCategory);
+        $categories = Category::pluck('name', 'id')->toArray();
+$selectedCategory = $request->input('selectedCategory');
+// dd ($selectedCategory);
+if ($selectedCategory !== null) {
+    $categoryId = (int)$selectedCategory;
+    // check xem category có tồn tại trong danh sách hay không
 
-    // Nếu category là defaultCategory, thực hiện xử lý cho sản phẩm là đồng hồ
-    // lưu vào trường category_id của bảng products
-    $watchCategoryId = Category::where('name', $defaultCategory)->first()->id;
-    $product->category_id = $watchCategoryId;
-    $product->producer_id = $request->producer_id;
-    $product->sku_code = $request->sku_code;
-    // $product->monitor = $request->monitor;
-    // $product->front_camera = $request->front_camera;
-    // $product->rear_camera = $request->rear_camera;
-    // $product->CPU = $request->CPU;
-    // $product->GPU = $request->GPU;
-    // $product->RAM = $request->RAM;
-    // $product->ROM = $request->ROM;
-    // $product->OS = $request->OS;
-    // $product->pin = $request->pin;
-    // Bạn có thể thêm xử lý khác nếu cần
+
+    if (array_key_exists($categoryId, $categories)) {
+        $product->category_id = $categoryId;
+    // check $categories[$categoryId]  có bằng điện thoại hay không
+
+    // dd ($categories[$categoryId]== 'Điện Thoại');
+
+        // Kiểm tra category là "Điện Thoại" hay không
+        if ($categories[$categoryId] == 'Điện Thoại') {
+            //    <input type="text" name="phone_name" class="form-control" id="name" placeholder="Tên sản Phẩm" required
+    // $product->slug = Str::slug($request->phone_name);
+    // $product->name = $request->phone_name;
+            // Xử lý khi là Điện Thoại, giữ nguyên các thông số
+            $product->producer_id = $request->producer_id;
+            $product->sku_code = $request->sku_code;
+
+
+            // dd ($product->sku_code);
+
+            $product->OS = $request->OS;
+
+        } elseif ($categories[$categoryId] == 'Đồng Hồ') {
+            // Xử lý khi là Đồng Hồ, bỏ qua các thông số không cần thiết
+            $product->producer_id = $request->producer_id;
+            $product->sku_code = $request->sku_code;
+            $product->sku_code = null;
+            $product->monitor = null;
+            $product->front_camera = null;
+            $product->rear_camera = null;
+            $product->CPU = null;
+            $product->GPU = null;
+            $product->RAM = null;
+            $product->ROM = null;
+            $product->OS = null;
+            $product->pin = null;
+        } elseif ($categories[$categoryId] == 'Phụ Kiện') {
+            // Xử lý khi là Phụ Kiện, bỏ qua các thông số không cần thiết
+                     $product->sku_code = $request->sku_code;
+            $product->sku_code = null;
+            $product->monitor = null;
+            $product->front_camera = null;
+            $product->rear_camera = null;
+            $product->CPU = null;
+            $product->GPU = null;
+            $product->RAM = null;
+            $product->ROM = null;
+            $product->OS = null;
+            $product->pin = null;
+        }
+
+        // Tiếp tục xử lý các trường khác nếu cần
+
+
+
+        // Tiếp tục xử lý khuyến mãi nếu cần
+    } else {
+              $product->producer_id = $request->producer_id;
+            $product->sku_code = $request->sku_code;
+
+
+            // dd ($product->sku_code);
+
+            $product->OS = $request->OS;
+        // Nếu category không tồn tại trong danh sách, xử lý theo logic khác (nếu cần)
+    }
 } else {
-    // Nếu category khác defaultCategory, thực hiện xử lý cho sản phẩm không phải là đồng hồ
-    // Đánh dấu sản phẩm không phải là đồng hồ
-
-    // Gán các thông số kỹ thuật từ request vào sản phẩm
-    // $product->producer_id = $request->producer_id;
-    // $product->sku_code = $request->sku_code;
-    // $product->monitor = $request->monitor;
-    // $product->front_camera = $request->front_camera;
-    // $product->rear_camera = $request->rear_camera;
-    // $product->CPU = $request->CPU;
-    // $product->GPU = $request->GPU;
-    // $product->RAM = $request->RAM;
-    // $product->ROM = $request->ROM;
-    // $product->OS = $request->OS;
-    // $product->pin = $request->pin;
-
-    // Bạn có thể thêm xử lý khác nếu cần
+    // Nếu selectedCategory không tồn tại trong request, xử lý theo logic khác (nếu cần)
 }
+
+
 
 
     // Lấy id của category để lưu vào product
