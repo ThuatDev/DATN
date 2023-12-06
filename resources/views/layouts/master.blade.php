@@ -22,6 +22,8 @@
   <link rel="stylesheet" href="{{ asset('common/css/owl.carousel.min.css') }}">
   <link rel="stylesheet" href="{{ asset('common/css/owl.theme.default.min.css') }}">
   <link rel="stylesheet" href="{{ asset('common/css/sweetalert2.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/promotion.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/item-phone.css') }}">
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="{{ asset('css/style.css') }}">

@@ -1,0 +1,250 @@
+.containerv1 {
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffcc00;
+    padding: 10px;
+    border-radius: 5px;
+}
+.flashsale__news-list {
+    white-space: nowrap;
+    overflow: hidden;
+}
+@keyframes marquee {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.flashsale__news-list {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.flashsale__news-list a {
+    display: inline-block;
+    margin-right: 20px; /* Adjust this value based on your preference */
+    animation: marquee 5s linear infinite; /* Adjust the duration based on your preference */
+}
+
+.flashsale__container {
+    /* background-color: #fff; */
+    /* padding: 20px; */
+}
+
+.flashsale__header {
+}
+
+.flashsale__title a {
+    color: #d0011b;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.flashsale__countdown-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.flashsale__item {
+    /* margin-bottom: 20px;
+      padding: 10px;
+
+      border-radius: 5px; */
+}
+
+.product-thumbnail__img {
+    max-width: 100%;
+    height: auto;
+    /* border: 1px solid #eee; */
+    border-radius: 5px;
+}
+
+.product-info {
+    text-align: center;
+}
+
+.product-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+.product-name a {
+    color: #333;
+    text-decoration: none;
+    font-size: 12px;
+}
+.price-box .price {
+    font-size: 14px;
+    color: #d0011b;
+    font-weight: bold;
+}
+
+.flashsale__bottom {
+    position: relative;
+    bottom: 10px;
+    width: 100%;
+}
+
+.flashsale__progressbar {
+    background-color: #eee;
+    height: 5px;
+    border-radius: 3px;
+}
+
+.flashsale___percent {
+    background-color: red;
+    height: 100%;
+    border-radius: 3px;
+}
+
+.btn-circle {
+    border-radius: 50%;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+    background-color: #eee;
+    border: none;
+}
+
+.product-action button:hover {
+    background-color: #e6b800;
+}
+.flashsale__item .item_product_main {
+    border-radius: 8px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid #eee;
+    padding: 10px;
+    background-color: #fff;
+}
+/* @media (max-width: 991px) {
+      .flashsale__item {
+        width: 100%;
+      }
+    } */
+/* css item  */
+/* CSS cho hiển thị ảnh phụ khi hover */
+.flashsale__item {
+    position: relative;
+}
+
+.frame-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 100%;
+}
+
+.product-thumbnail__img--primary,
+.product-thumbnail__img--secondary {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block; /* Đảm bảo ảnh là khối block */
+}
+
+.product-thumbnail__img--secondary {
+    opacity: 0;
+    width: 80%; /* Chỉ chiếm 80% của khung */
+    height: 80%;
+    transition: opacity 0.3s ease;
+}
+
+.flashsale__item:hover .product-thumbnail__img--secondary {
+    opacity: 1;
+}
+.product-action {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    width: 40%;
+    transform: translate(-50%, -50%);
+    display: block; /* Đảm bảo ảnh là khối block */
+}
+/* hover vào ảnh thứ hai  hiện lên nút xem nhanh và so sánh  */
+.product-action {
+    display: none;
+}
+.flashsale__item:hover .product-action {
+    display: block;
+}
+/* CSS để canh chỉnh và thêm khung cho ảnh đầu tiên */
+.product-frame {
+    position: relative;
+    width: 100%;
+    z-index: 9999;
+
+    /* Chỉnh kích thước của khung */
+    /* Thay đổi màu và độ rộng của khung nếu cần */
+}
+
+.product-thumbnail__img--primary,
+.product-thumbnail__img--secondary {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block; /* Đảm bảo ảnh là khối block */
+}
+
+.product-thumbnail__img--primary {
+    width: 51%;
+    height: 28%;
+    object-fit: contain;
+    /* Thay đổi màu và độ rộng của khung nếu cần */
+}
+
+.flashsale__item:hover .product-thumbnail__img--primary {
+    display: none; /* Ẩn ảnh đầu tiên khi hover vào ảnh thứ hai */
+}
+
+.product-thumbnail__img--secondary {
+    width: 60%; /* Chiếm 60% của khung */
+    height: 60%;
+}
+/* thanh %  */
+.flashsale__progressbar {
+    width: 100%;
+    background-color: #ddd; /* Màu nền của thanh trạng thái */
+    height: 10px; /* Chiều cao của thanh trạng thái */
+    border-radius: 10px; /* Độ bo của đầu thanh */
+    overflow: hidden; /* Ẩn nội dung ra khỏi phạm vi của đầu bo */
+    position: relative;
+}
+
+.flashsale___percent {
+    height: 100%;
+    background-color: #ff0000; /* Màu của phần trăm đã đổ đầy */
+    border-radius: 10px; /* Độ bo của đầu thanh */
+}
+
+.flashsale__label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff; /* Màu chữ */
+    font-size: 12px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+/* css cart  */
+.product-item-cta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0px;
+    margin-bottom: 6px;
+}

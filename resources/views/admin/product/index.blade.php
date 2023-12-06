@@ -157,12 +157,12 @@
                 <a href="{{ route('admin.product.index') }}" class="btn btn-flat btn-primary" title="Refresh" style="margin-right: 5px;">
                   <i class="fa fa-refresh"></i><span class="hidden-xs"> Refresh</span>
                 </a>
-                {{-- <a href="{{ route('admin.product.new') }}" class="btn btn-success btn-flat" title="New Product">
+                <a href="{{ route('admin.product.new') }}" class="btn btn-success btn-flat" title="New Product">
                   <i class="fa fa-plus" aria-hidden="true"></i><span class="hidden-xs"> New Product</span>
-                </a> --}}
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newProductModal">
+                </a>
+                {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newProductModal">
     Add Product
-</button>
+</button> --}}
 
 <!-- Modal -->
 <div class="modal fade" id="newProductModal" tabindex="-1" role="dialog" aria-labelledby="newProductModalLabel" aria-hidden="true">
