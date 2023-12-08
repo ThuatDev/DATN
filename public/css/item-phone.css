@@ -2,6 +2,7 @@
     width: 279px;
     max-width: 279px;
     max-height: 500px;
+    position: relative;
 }
 .product-name-1 {
     display: -webkit-box;
@@ -43,18 +44,20 @@
 
 .product-col {
     border: 1px solid #eee;
-    margin-left: -1px;
-    margin-bottom: -1px;
-    padding-left: 0;
-    padding-right: 0;
+    margin: 0 0 10px;
+    padding: 0;
 }
 @media (min-width: 992px) {
-    .col-lg-30 {
-        max-width: 40%;
-        flex: 0 0 40%;
+    .col-lg-30,
+    .col-lg-15 {
+        max-width: 100%; /* Đảm bảo chiếm toàn bộ chiều rộng trong lớn hơn 992px */
+        flex: 0 0 100%;
     }
     .box-hover img {
-        width: 500px;
+        max-width: 100%;
+        max-height: 100%;
+        width: 100%;
+        height: 100%;
     }
 }
 .banner img {
@@ -77,26 +80,46 @@
     }
 }
 .box-hover {
-    margin: 10px auto;
-    height: auto;
-    overflow: hidden;
     position: relative;
-    width: 200px;
-}
-.box-hover img {
+    width: 100%;
     max-width: 100%;
-    transition: all 0.5s ease-in-out;
-    object-fit: contain;
+    height: 0;
+    padding-bottom: 100%; /* Đặt tỉ lệ khung hình vuông (1:1) */
+    overflow: hidden;
 }
 
-.box-hover .img-change {
+.box-hover img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
     position: absolute;
     top: 0;
-    right: 0;
-    opacity: 1;
+    left: 0;
+    transition: opacity 0.5s ease-in-out;
 }
-.box-hover:hover .img-change {
+
+.img-change {
     opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.box-hover:hover .img-first {
+    opacity: 0;
+}
+
+.box-hover:hover .img-change {
+    animation: slideFromBottom 0.5s ease-in-out forwards;
+}
+
+@keyframes slideFromBottom {
+    from {
+        top: 100%;
+        opacity: 0;
+    }
+    to {
+        top: 0;
+        opacity: 1;
+    }
 }
 .product-promo-tag {
     font-size: 12px;
