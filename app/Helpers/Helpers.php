@@ -10,6 +10,26 @@ use Illuminate\Support\Facades\DB;
  */
 class Helpers
 {
+public static function get_promotion_html($promotion_price, $price) {
+    $output = '<div class="price-boxx">';
+
+    if ($promotion_price != null) {
+        $percent = round(100 * ($price - $promotion_price) / $price);
+
+        $output .= '<span class="price-1">' . number_format($promotion_price) . '₫</span>';
+        $output .= '<span class="compare-price">' . number_format($price) . '₫</span>';
+        $output .= '<div class="label_product d-inline-block">';
+        $output .= '<div class="label_wrapper">-' . $percent . '%</div>';
+        $output .= '</div>';
+    } else {
+        $output .= '<span class="price-1">' . number_format($price) . '₫</span>';
+    }
+
+    $output .= '</div>';
+
+    return $output;
+}
+
   public static function get_start_vote($rate) {
     $output = '';
     if($rate == 0){

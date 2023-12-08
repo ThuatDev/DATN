@@ -15,4 +15,8 @@ class ProductDetail extends Model
   public function order_details() {
     return $this->hasMany('App\Models\OrderDetail');
   }
+     public function productImages()
+    {
+        return $this->hasMany('App\Models\ProductImage', 'product_detail_id', 'id');
+    }
 }

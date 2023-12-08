@@ -27,6 +27,10 @@ class Product extends Model
   public function product_detail() {
     return $this->hasOne('App\Models\ProductDetail', 'product_id', 'id');
   }
+     public function productImages()
+    {
+        return $this->hasOneThrough('App\Models\ProductImage', 'App\Models\ProductDetail', 'product_id', 'product_detail_id', 'id', 'id');
+    }
   public function category()
 {
     return $this->belongsTo(Category::class);
