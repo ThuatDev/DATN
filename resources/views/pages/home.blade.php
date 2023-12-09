@@ -1,10 +1,10 @@
 @extends('layouts.master')
 
 @section('title', 'Trang Chủ')
- <link
+ {{-- <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
+    /> --}}
 
 @section('content')
   <div class="site-home">
@@ -50,6 +50,12 @@
     </section>
 
   <body>
+    <div class ="container" >
+    {{-- <img src="https://xphone.vn/storage/images/products/1702130927_e2yU4OGs_z4958868925320_0f386fc12ca8e2e4a2d0729fcf3a8cc6.jpg" alt="" style="width: 100%; height: 100%"> --}}
+    {{-- https://xphone.vn/storage/images/products/1702163380_AJV5a961_z4959549512619_777bd13c3e593ef2e602f65d5b60338c.jpg --}}
+        <img src="https://xphone.vn/storage/images/products/1702163380_AJV5a961_z4959549512619_777bd13c3e593ef2e602f65d5b60338c.jpg" alt="" style="width: 100%; height: 100%">
+       <img src="  https://xphone.vn/storage/images/products/1702162610_bkWUzJss_z4959539875374_7fbdb83268cf009e961199a607c41cbb.jpg" alt="" style="width: 100%; height: 100%">
+        </div>
     <div class="container-fluid containerv1 ">
       <div
         class="title_module_main row mx-0 heading-bar d-flex justify-content-between align-items-center py-0"
@@ -203,8 +209,8 @@
       <div class="container-fluid">
   <div class="row mx-0 flashsale__container">
     <!-- Sản phẩm 1 -->
-    <div class="col-12 col-lg-2 flashsale__item">
-      <div class="item_product_main">
+       <div class="flashsale__item px-2">
+      <div class="item_product_main  px-2">
         <form action="">
           <div class="product-thumbnail">
             <a
@@ -218,8 +224,7 @@
               />
               <img
                 class="product-thumbnail__img product-thumbnail__img--primary"
-                width="480"
-                height="480"
+
                 style="--image-scale: 0.75"
                 src="//bizweb.dktcdn.net/thumb/medium/100/441/086/products/apple-watch-s7-gps-45mm-xanh-la-thumb-660x600.jpg?v=1639821419160"
                 alt="Apple Watch Series 7 Viền nhôm Cellular"
@@ -227,8 +232,7 @@
 
               <img
                 class="product-thumbnail__img product-thumbnail__img--secondary"
-                width="480"
-                height="480"
+
                 style="--image-scale: 0.75"
                 src="//bizweb.dktcdn.net/thumb/medium/100/441/086/products/810903614-jpeg.jpg?v=1639821419160"
                 alt="Apple Watch Series 7 Viền nhôm Cellular"
@@ -319,8 +323,468 @@
 						</div>
       </div>
     </div>
+    {{-- v3  --}}
+       <div class="flashsale__item px-2">
+      <div class="item_product_main  px-2">
+        <form action="">
+          <div class="product-thumbnail">
+            <a
+              href="https://ega-techstore.mysapo.net/apple-watch-series-7-vien-nhom-cellular"
+              class="image_thumb"
+            >
+              <img
+                src="https://bizweb.dktcdn.net/100/441/086/themes/896335/assets/frame_1.png?1700018532869"
+                alt=""
+                class="product-frame"
+              />
+              <img
+                class="product-thumbnail__img product-thumbnail__img--primary"
 
+                style="--image-scale: 0.75"
+                src="//bizweb.dktcdn.net/thumb/medium/100/441/086/products/apple-watch-s7-gps-45mm-xanh-la-thumb-660x600.jpg?v=1639821419160"
+                alt="Apple Watch Series 7 Viền nhôm Cellular"
+              />
+
+              <img
+                class="product-thumbnail__img product-thumbnail__img--secondary"
+
+                style="--image-scale: 0.75"
+                src="//bizweb.dktcdn.net/thumb/medium/100/441/086/products/810903614-jpeg.jpg?v=1639821419160"
+                alt="Apple Watch Series 7 Viền nhôm Cellular"
+              />
+            </a>
+            <div class="product-action  ">
+              <div
+                class="group_action d-flex justify-content-center align-items-center"
+                data-url="/apple-watch-series-7-vien-nhom-cellular"
+              >
+                <a
+                  title="Xem nhanh"
+                  href="/apple-watch-series-7-vien-nhom-cellular"
+                  data-handle="apple-watch-series-7-vien-nhom-cellular"
+                  class="xem_nhanh btn-circle btn-views btn_view btn right-to quick-view"
+                >
+                  <i class="fas fa-search"></i>
+                </a>
+                <a
+                  title="So sánh"
+                  data-id="24123431"
+                  class="btn-circle btn-views btn js-compare-product-add"
+                >
+                  <i class="fas fa-random"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-info">
+            <h3 class="product-name">
+              <a
+                href="/apple-watch-series-7-vien-nhom-cellular"
+                title="Apple Watch Series 7 Viền nhôm Cellular"
+                >Apple Watch Series 7 Viền nhôm Cellular</a
+              >
+            </h3>
+            <div class="product-item-cta position-relative">
+              <div class="price-box">
+                <span class="price">20.490.000₫</span>
+              </div>
+              <input
+                class="hidden"
+                type="hidden"
+                name="variantId"
+                value="56626566"
+              />
+
+              <button
+                data-href="/apple-watch-series-7-vien-nhom-cellular"
+                data-handle="apple-watch-series-7-vien-nhom-cellular"
+              class="product-item-btnx btn left-to quick-view px-4"
+                title="Tùy chọn"
+                type="button"
+              >
+               <!-- icon cart -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 512 512">
+
+<defs>
+
+<style>.cls-1{fill:#f19ec3;}</style>
+
+</defs>
+
+<title/>
+
+<g data-name="Layer 9" id="Layer_9">
+
+<path class="cls-1" d="M152,164,133.43,378l-.43,5s9,30,45,30h78V164Z"/>
+
+<path d="M388,376.15,369,162.31a8.13,8.13,0,0,0-8.19-7.44h-40a64.57,64.57,0,0,0-129.13,0h-40a8.23,8.23,0,0,0-8.19,7.44l-19,213.83v.75c0,23.82,21.91,43.2,48.8,43.2H339.2c26.89,0,48.8-19.38,48.8-43.2ZM256.28,106.76a48.25,48.25,0,0,1,48.19,48.12H208.09A48.25,48.25,0,0,1,256.28,106.76ZM339.2,403.65H173.35c-17.75,0-32.21-11.81-32.42-26.48l18.29-205.91h32.49V200a8.19,8.19,0,0,0,16.38,0V171.26h96.37V200a8.19,8.19,0,1,0,16.38,0V171.26h32.49l18.29,206C371.41,391.84,356.95,403.65,339.2,403.65Z"/>
+
+<path d="M290.33,260.87,242,309.19l-19.72-19.72a8.2,8.2,0,1,0-11.6,11.6l25.53,25.53A8.22,8.22,0,0,0,242,329a8.34,8.34,0,0,0,5.8-2.39l54.12-54.12a8.2,8.2,0,0,0,0-11.6A8.32,8.32,0,0,0,290.33,260.87Z"/>
+
+</g>
+
+</svg>
+              </button>
+            </div>
+          </div>
+        </form>
+        <div class="flashsale__bottom" style="">
+														<div class="flashsale__progressbar style2">
+																						<div class="flashsale__label"><img src="//bizweb.dktcdn.net/100/441/086/themes/896335/assets/fire-icon.svg?1700018532869"> Sắp cháy hàng</div>
+
+																<div class="flashsale___percent" style="width: 95%;"></div>
+							</div>
 						</div>
+      </div>
+    </div>
+    {{-- v4  --}}
+       <div class="flashsale__item px-2">
+      <div class="item_product_main  px-2">
+        <form action="">
+          <div class="product-thumbnail">
+            <a
+              href="https://ega-techstore.mysapo.net/apple-watch-series-7-vien-nhom-cellular"
+              class="image_thumb"
+            >
+              <img
+                src="https://bizweb.dktcdn.net/100/441/086/themes/896335/assets/frame_1.png?1700018532869"
+                alt=""
+                class="product-frame"
+              />
+              <img
+                class="product-thumbnail__img product-thumbnail__img--primary"
+
+                style="--image-scale: 0.75"
+                src="//bizweb.dktcdn.net/thumb/medium/100/441/086/products/apple-watch-s7-gps-45mm-xanh-la-thumb-660x600.jpg?v=1639821419160"
+                alt="Apple Watch Series 7 Viền nhôm Cellular"
+              />
+
+              <img
+                class="product-thumbnail__img product-thumbnail__img--secondary"
+
+                style="--image-scale: 0.75"
+                src="//bizweb.dktcdn.net/thumb/medium/100/441/086/products/810903614-jpeg.jpg?v=1639821419160"
+                alt="Apple Watch Series 7 Viền nhôm Cellular"
+              />
+            </a>
+            <div class="product-action  ">
+              <div
+                class="group_action d-flex justify-content-center align-items-center"
+                data-url="/apple-watch-series-7-vien-nhom-cellular"
+              >
+                <a
+                  title="Xem nhanh"
+                  href="/apple-watch-series-7-vien-nhom-cellular"
+                  data-handle="apple-watch-series-7-vien-nhom-cellular"
+                  class="xem_nhanh btn-circle btn-views btn_view btn right-to quick-view"
+                >
+                  <i class="fas fa-search"></i>
+                </a>
+                <a
+                  title="So sánh"
+                  data-id="24123431"
+                  class="btn-circle btn-views btn js-compare-product-add"
+                >
+                  <i class="fas fa-random"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-info">
+            <h3 class="product-name">
+              <a
+                href="/apple-watch-series-7-vien-nhom-cellular"
+                title="Apple Watch Series 7 Viền nhôm Cellular"
+                >Apple Watch Series 7 Viền nhôm Cellular</a
+              >
+            </h3>
+            <div class="product-item-cta position-relative">
+              <div class="price-box">
+                <span class="price">20.490.000₫</span>
+              </div>
+              <input
+                class="hidden"
+                type="hidden"
+                name="variantId"
+                value="56626566"
+              />
+
+              <button
+                data-href="/apple-watch-series-7-vien-nhom-cellular"
+                data-handle="apple-watch-series-7-vien-nhom-cellular"
+              class="product-item-btnx btn left-to quick-view px-4"
+                title="Tùy chọn"
+                type="button"
+              >
+               <!-- icon cart -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 512 512">
+
+<defs>
+
+<style>.cls-1{fill:#f19ec3;}</style>
+
+</defs>
+
+<title/>
+
+<g data-name="Layer 9" id="Layer_9">
+
+<path class="cls-1" d="M152,164,133.43,378l-.43,5s9,30,45,30h78V164Z"/>
+
+<path d="M388,376.15,369,162.31a8.13,8.13,0,0,0-8.19-7.44h-40a64.57,64.57,0,0,0-129.13,0h-40a8.23,8.23,0,0,0-8.19,7.44l-19,213.83v.75c0,23.82,21.91,43.2,48.8,43.2H339.2c26.89,0,48.8-19.38,48.8-43.2ZM256.28,106.76a48.25,48.25,0,0,1,48.19,48.12H208.09A48.25,48.25,0,0,1,256.28,106.76ZM339.2,403.65H173.35c-17.75,0-32.21-11.81-32.42-26.48l18.29-205.91h32.49V200a8.19,8.19,0,0,0,16.38,0V171.26h96.37V200a8.19,8.19,0,1,0,16.38,0V171.26h32.49l18.29,206C371.41,391.84,356.95,403.65,339.2,403.65Z"/>
+
+<path d="M290.33,260.87,242,309.19l-19.72-19.72a8.2,8.2,0,1,0-11.6,11.6l25.53,25.53A8.22,8.22,0,0,0,242,329a8.34,8.34,0,0,0,5.8-2.39l54.12-54.12a8.2,8.2,0,0,0,0-11.6A8.32,8.32,0,0,0,290.33,260.87Z"/>
+
+</g>
+
+</svg>
+              </button>
+            </div>
+          </div>
+        </form>
+        <div class="flashsale__bottom" style="">
+														<div class="flashsale__progressbar style2">
+																						<div class="flashsale__label"><img src="//bizweb.dktcdn.net/100/441/086/themes/896335/assets/fire-icon.svg?1700018532869"> Sắp cháy hàng</div>
+
+																<div class="flashsale___percent" style="width: 95%;"></div>
+							</div>
+						</div>
+      </div>
+    </div>
+       <div class="flashsale__item px-2">
+      <div class="item_product_main  px-2">
+        <form action="">
+          <div class="product-thumbnail">
+            <a
+              href="https://ega-techstore.mysapo.net/apple-watch-series-7-vien-nhom-cellular"
+              class="image_thumb"
+            >
+              <img
+                src="https://bizweb.dktcdn.net/100/441/086/themes/896335/assets/frame_1.png?1700018532869"
+                alt=""
+                class="product-frame"
+              />
+              <img
+                class="product-thumbnail__img product-thumbnail__img--primary"
+
+                style="--image-scale: 0.75"
+                src="//bizweb.dktcdn.net/thumb/medium/100/441/086/products/apple-watch-s7-gps-45mm-xanh-la-thumb-660x600.jpg?v=1639821419160"
+                alt="Apple Watch Series 7 Viền nhôm Cellular"
+              />
+
+              <img
+                class="product-thumbnail__img product-thumbnail__img--secondary"
+
+                style="--image-scale: 0.75"
+                src="//bizweb.dktcdn.net/thumb/medium/100/441/086/products/810903614-jpeg.jpg?v=1639821419160"
+                alt="Apple Watch Series 7 Viền nhôm Cellular"
+              />
+            </a>
+            <div class="product-action  ">
+              <div
+                class="group_action d-flex justify-content-center align-items-center"
+                data-url="/apple-watch-series-7-vien-nhom-cellular"
+              >
+                <a
+                  title="Xem nhanh"
+                  href="/apple-watch-series-7-vien-nhom-cellular"
+                  data-handle="apple-watch-series-7-vien-nhom-cellular"
+                  class="xem_nhanh btn-circle btn-views btn_view btn right-to quick-view"
+                >
+                  <i class="fas fa-search"></i>
+                </a>
+                <a
+                  title="So sánh"
+                  data-id="24123431"
+                  class="btn-circle btn-views btn js-compare-product-add"
+                >
+                  <i class="fas fa-random"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-info">
+            <h3 class="product-name">
+              <a
+                href="/apple-watch-series-7-vien-nhom-cellular"
+                title="Apple Watch Series 7 Viền nhôm Cellular"
+                >Apple Watch Series 7 Viền nhôm Cellular</a
+              >
+            </h3>
+            <div class="product-item-cta position-relative">
+              <div class="price-box">
+                <span class="price">20.490.000₫</span>
+              </div>
+              <input
+                class="hidden"
+                type="hidden"
+                name="variantId"
+                value="56626566"
+              />
+
+              <button
+                data-href="/apple-watch-series-7-vien-nhom-cellular"
+                data-handle="apple-watch-series-7-vien-nhom-cellular"
+              class="product-item-btnx btn left-to quick-view px-4"
+                title="Tùy chọn"
+                type="button"
+              >
+               <!-- icon cart -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 512 512">
+
+<defs>
+
+<style>.cls-1{fill:#f19ec3;}</style>
+
+</defs>
+
+<title/>
+
+<g data-name="Layer 9" id="Layer_9">
+
+<path class="cls-1" d="M152,164,133.43,378l-.43,5s9,30,45,30h78V164Z"/>
+
+<path d="M388,376.15,369,162.31a8.13,8.13,0,0,0-8.19-7.44h-40a64.57,64.57,0,0,0-129.13,0h-40a8.23,8.23,0,0,0-8.19,7.44l-19,213.83v.75c0,23.82,21.91,43.2,48.8,43.2H339.2c26.89,0,48.8-19.38,48.8-43.2ZM256.28,106.76a48.25,48.25,0,0,1,48.19,48.12H208.09A48.25,48.25,0,0,1,256.28,106.76ZM339.2,403.65H173.35c-17.75,0-32.21-11.81-32.42-26.48l18.29-205.91h32.49V200a8.19,8.19,0,0,0,16.38,0V171.26h96.37V200a8.19,8.19,0,1,0,16.38,0V171.26h32.49l18.29,206C371.41,391.84,356.95,403.65,339.2,403.65Z"/>
+
+<path d="M290.33,260.87,242,309.19l-19.72-19.72a8.2,8.2,0,1,0-11.6,11.6l25.53,25.53A8.22,8.22,0,0,0,242,329a8.34,8.34,0,0,0,5.8-2.39l54.12-54.12a8.2,8.2,0,0,0,0-11.6A8.32,8.32,0,0,0,290.33,260.87Z"/>
+
+</g>
+
+</svg>
+              </button>
+            </div>
+          </div>
+        </form>
+        <div class="flashsale__bottom" style="">
+														<div class="flashsale__progressbar style2">
+																						<div class="flashsale__label"><img src="//bizweb.dktcdn.net/100/441/086/themes/896335/assets/fire-icon.svg?1700018532869"> Sắp cháy hàng</div>
+
+																<div class="flashsale___percent" style="width: 95%;"></div>
+							</div>
+						</div>
+      </div>
+    </div>
+    {{-- v2  --}}
+    <div class="flashsale__item px-2">
+      <div class="item_product_main  px-2">
+        <form action="">
+          <div class="product-thumbnail">
+            <a
+              href="https://ega-techstore.mysapo.net/apple-watch-series-7-vien-nhom-cellular"
+              class="image_thumb"
+            >
+              <img
+                src="https://bizweb.dktcdn.net/100/441/086/themes/896335/assets/frame_1.png?1700018532869"
+                alt=""
+                class="product-frame"
+              />
+              <img
+                class="product-thumbnail__img product-thumbnail__img--primary"
+
+                style="--image-scale: 0.75"
+                src="//bizweb.dktcdn.net/thumb/medium/100/441/086/products/pin-sac-du-phong-10000mah-xmobile-gram-4-dull-dog-avatar-1-600x600.jpg?v=1639889481827"
+                alt="Apple Watch Series 7 Viền nhôm Cellular"
+              />
+
+              <img
+                class="product-thumbnail__img product-thumbnail__img--secondary"
+
+                style="--image-scale: 0.75"
+                src="//bizweb.dktcdn.net/thumb/medium/100/441/086/products/810903614-jpeg.jpg?v=1639821419160"
+                alt="Apple Watch Series 7 Viền nhôm Cellular"
+              />
+            </a>
+            <div class="product-action  ">
+              <div
+                class="group_action d-flex justify-content-center align-items-center"
+                data-url="/apple-watch-series-7-vien-nhom-cellular"
+              >
+                <a
+                  title="Xem nhanh"
+                  href="/apple-watch-series-7-vien-nhom-cellular"
+                  data-handle="apple-watch-series-7-vien-nhom-cellular"
+                  class="xem_nhanh btn-circle btn-views btn_view btn right-to quick-view"
+                >
+                  <i class="fas fa-search"></i>
+                </a>
+                <a
+                  title="So sánh"
+                  data-id="24123431"
+                  class="btn-circle btn-views btn js-compare-product-add"
+                >
+                  <i class="fas fa-random"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-info">
+            <h3 class="product-name">
+              <a
+                href="/apple-watch-series-7-vien-nhom-cellular"
+                title="Apple Watch Series 7 Viền nhôm Cellular"
+                >Apple Watch Series 7 Viền nhôm Cellular</a
+              >
+            </h3>
+            <div class="product-item-cta position-relative">
+              <div class="price-box">
+                <span class="price">20.490.000₫</span>
+              </div>
+              <input
+                class="hidden"
+                type="hidden"
+                name="variantId"
+                value="56626566"
+              />
+
+              <button
+                data-href="/apple-watch-series-7-vien-nhom-cellular"
+                data-handle="apple-watch-series-7-vien-nhom-cellular"
+              class="product-item-btnx btn left-to quick-view px-4"
+                title="Tùy chọn"
+                type="button"
+              >
+               <!-- icon cart -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 512 512">
+
+<defs>
+
+<style>.cls-1{fill:#f19ec3;}</style>
+
+</defs>
+
+<title/>
+
+<g data-name="Layer 9" id="Layer_9">
+
+<path class="cls-1" d="M152,164,133.43,378l-.43,5s9,30,45,30h78V164Z"/>
+
+<path d="M388,376.15,369,162.31a8.13,8.13,0,0,0-8.19-7.44h-40a64.57,64.57,0,0,0-129.13,0h-40a8.23,8.23,0,0,0-8.19,7.44l-19,213.83v.75c0,23.82,21.91,43.2,48.8,43.2H339.2c26.89,0,48.8-19.38,48.8-43.2ZM256.28,106.76a48.25,48.25,0,0,1,48.19,48.12H208.09A48.25,48.25,0,0,1,256.28,106.76ZM339.2,403.65H173.35c-17.75,0-32.21-11.81-32.42-26.48l18.29-205.91h32.49V200a8.19,8.19,0,0,0,16.38,0V171.26h96.37V200a8.19,8.19,0,1,0,16.38,0V171.26h32.49l18.29,206C371.41,391.84,356.95,403.65,339.2,403.65Z"/>
+
+<path d="M290.33,260.87,242,309.19l-19.72-19.72a8.2,8.2,0,1,0-11.6,11.6l25.53,25.53A8.22,8.22,0,0,0,242,329a8.34,8.34,0,0,0,5.8-2.39l54.12-54.12a8.2,8.2,0,0,0,0-11.6A8.32,8.32,0,0,0,290.33,260.87Z"/>
+
+</g>
+
+</svg>
+              </button>
+            </div>
+          </div>
+        </form>
+        <div class="flashsale__bottom" style="">
+														<div class="flashsale__progressbar style2">
+																						<div class="flashsale__label"><img src="//bizweb.dktcdn.net/100/441/086/themes/896335/assets/fire-icon.svg?1700018532869"> Sắp cháy hàng</div>
+
+																<div class="flashsale___percent" style="width: 95%;"></div>
+							</div>
+						</div>
+      </div>
+    </div>
+ {{-- end imtem --}}
+						</div>
+
       </div>
     </div>
     <!-- Các sản phẩm khác -->
@@ -336,10 +800,10 @@
 
 
   </div>
-    <link
+    {{-- <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
+    /> --}}
    <section>
       <div class="container">
 <div class="row">
@@ -349,7 +813,7 @@
 </div>
 
 <div class="row">
-    <div class="col-6 col-lg-30 block product-col">
+    <div class="col-lg-30 block product-col d-none d-lg-block">
         <div class="">
             <a class="banner" href="">
                 <img src="https://bizweb.dktcdn.net/thumb/grande/100/441/086/themes/896335/assets/section_hot.jpg?1700018532869"
@@ -357,9 +821,13 @@
             </a>
         </div>
     </div>
-
+     {{-- <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    /> --}}
     @foreach($data['products'] as $key => $product)
-        <div class="col-6 col-md-3 col-lg-15 product-col p-2">
+
+        <div class="col-lg-15  product-col p-2">
             <a href="{{ route('product_page', ['id' => $product->slug]) }}" title="{{ $product->name }}">
                 <div class="box-hover">
 
@@ -437,10 +905,11 @@
     </section>
 @endsection
 
+
+
+{{-- thêm code mới vào đây  --}}
 @section('css')
-
 @endsection
-
 @section('js')
   <script>
     $(document).ready(function(){

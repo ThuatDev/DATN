@@ -39,7 +39,7 @@ class HomePage extends Controller
         },
     ])
     ->latest()
-    ->limit(9)
+    ->limit(8)
     ->get();
         // dd ($products->toArray());
     $favorite_products = Product::select('id','name', 'image','slug', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'rate')

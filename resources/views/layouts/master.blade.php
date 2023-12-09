@@ -9,7 +9,10 @@
 
   <title> @yield('title') - {{ config('app.name') }} </title>
   <link rel="icon" href="{{ asset('images/favicon.png') }}" type="image/png">
-
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
