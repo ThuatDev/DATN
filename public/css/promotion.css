@@ -2,13 +2,14 @@
     margin: 0 auto;
     padding: 20px;
     background-color: #ffcc00;
-    padding: 10px;
     border-radius: 5px;
 }
+
 .flashsale__news-list {
     white-space: nowrap;
     overflow: hidden;
 }
+
 @keyframes marquee {
     0% {
         transform: translateX(100%);
@@ -25,8 +26,8 @@
 
 .flashsale__news-list a {
     display: inline-block;
-    margin-right: 20px; /* Adjust this value based on your preference */
-    animation: marquee 5s linear infinite; /* Adjust the duration based on your preference */
+    margin-right: 20px;
+    animation: marquee 5s linear infinite;
 }
 
 .flashsale__container {
@@ -50,16 +51,15 @@
 }
 
 .flashsale__item {
+    max-width: 100%;
     /* margin-bottom: 20px;
-      padding: 10px;
-
-      border-radius: 5px; */
+            padding: 10px;
+            border-radius: 5px; */
 }
 
 .product-thumbnail__img {
     max-width: 100%;
     height: auto;
-    /* border: 1px solid #eee; */
     border-radius: 5px;
 }
 
@@ -72,11 +72,14 @@
     font-weight: bold;
     color: #333;
 }
+
 .product-name a {
     color: #333;
     text-decoration: none;
     font-size: 12px;
+    text-decoration: none;
 }
+
 .price-box .price {
     font-size: 14px;
     color: #d0011b;
@@ -113,6 +116,7 @@
 .product-action button:hover {
     background-color: #e6b800;
 }
+
 .flashsale__item .item_product_main {
     border-radius: 8px;
     height: 100%;
@@ -123,13 +127,7 @@
     padding: 10px;
     background-color: #fff;
 }
-/* @media (max-width: 991px) {
-      .flashsale__item {
-        width: 100%;
-      }
-    } */
-/* css item  */
-/* CSS cho hiển thị ảnh phụ khi hover */
+
 .flashsale__item {
     position: relative;
 }
@@ -147,15 +145,15 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 100%;
+    max-width: 100%;
     height: 100%;
-    object-fit: contain;
-    display: block; /* Đảm bảo ảnh là khối block */
+    object-fit: contain; /* Đặt thuộc tính object-fit thành contain */
+    display: block;
 }
 
 .product-thumbnail__img--secondary {
     opacity: 0;
-    width: 80%; /* Chỉ chiếm 80% của khung */
+    width: 80%;
     height: 80%;
     transition: opacity 0.3s ease;
 }
@@ -163,76 +161,74 @@
 .flashsale__item:hover .product-thumbnail__img--secondary {
     opacity: 1;
 }
+
 .product-action {
     position: absolute;
-    top: 30%;
+    top: 50%;
     left: 50%;
-    width: 40%;
+    width: 30%; /* Thay đổi chiều rộng theo nhu cầu */
     transform: translate(-50%, -50%);
-    display: block; /* Đảm bảo ảnh là khối block */
+    display: block;
 }
-/* hover vào ảnh thứ hai  hiện lên nút xem nhanh và so sánh  */
+
 .product-action {
     display: none;
 }
+
 .flashsale__item:hover .product-action {
     display: block;
 }
-/* CSS để canh chỉnh và thêm khung cho ảnh đầu tiên */
+
 .product-frame {
     position: relative;
     width: 100%;
     z-index: 9999;
-
-    /* Chỉnh kích thước của khung */
-    /* Thay đổi màu và độ rộng của khung nếu cần */
 }
 
 .product-thumbnail__img--primary,
 .product-thumbnail__img--secondary {
     position: absolute;
-    top: 30%;
+    top: 35%;
     left: 50%;
     transform: translate(-50%, -50%);
-    display: block; /* Đảm bảo ảnh là khối block */
+    display: block;
 }
 
 .product-thumbnail__img--primary {
-    width: 51%;
-    height: 28%;
-    object-fit: contain;
-    /* Thay đổi màu và độ rộng của khung nếu cần */
+    max-width: 80%; /* Đặt chiều rộng tối đa của ảnh thứ nhất */
+    height: auto;
+    object-fit: cover;
 }
 
 .flashsale__item:hover .product-thumbnail__img--primary {
-    display: none; /* Ẩn ảnh đầu tiên khi hover vào ảnh thứ hai */
+    display: none;
 }
 
 .product-thumbnail__img--secondary {
-    width: 60%; /* Chiếm 60% của khung */
-    height: 60%;
+    max-width: 80%; /* Đặt chiều rộng tối đa của ảnh thứ hai */
+    max-height: 80%; /* Đặt chiều cao tối đa của ảnh thứ hai */
 }
-/* thanh %  */
+
 .flashsale__progressbar {
     width: 100%;
-    background-color: #ddd; /* Màu nền của thanh trạng thái */
-    height: 10px; /* Chiều cao của thanh trạng thái */
-    border-radius: 10px; /* Độ bo của đầu thanh */
-    overflow: hidden; /* Ẩn nội dung ra khỏi phạm vi của đầu bo */
+    background-color: #ddd;
+    height: 10px;
+    border-radius: 10px;
+    overflow: hidden;
     position: relative;
 }
 
 .flashsale___percent {
     height: 100%;
-    background-color: #ff0000; /* Màu của phần trăm đã đổ đầy */
-    border-radius: 10px; /* Độ bo của đầu thanh */
+    background-color: #ff0000;
+    border-radius: 10px;
 }
 
 .flashsale__label {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff; /* Màu chữ */
+    color: #fff;
     font-size: 12px;
     position: absolute;
     top: 0;
@@ -240,11 +236,73 @@
     left: 0;
     right: 0;
 }
-/* css cart  */
+
 .product-item-cta {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 0px;
     margin-bottom: 6px;
+}
+
+@media (min-width: 992px) {
+    .flashsale__item {
+        width: 20%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .flashsale__item {
+        width: 20%;
+        flex: 0 0 20%;
+        overflow: hidden;
+    }
+    .product-thumbnail__img--primary,
+    .product-thumbnail__img--secondary {
+        position: absolute;
+        top: 29%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: block;
+    }
+    .product-thumbnail__img--primary {
+        max-width: 68%;
+        height: auto;
+        object-fit: cover;
+    }
+    .price-box .price {
+        font-size: 12px;
+        color: #d0011b;
+        font-weight: bold;
+    }
+}
+
+@media (max-width: 767px) {
+    .flashsale__item {
+        width: 50% !important;
+    }
+    .flashsale__item .item_product_main {
+        height: auto;
+        margin-bottom: 10px;
+    }
+
+    .flashsale__progressbar {
+        height: 5px;
+    }
+
+    .flashsale__item {
+        width: 100%;
+    }
+
+    .product-info {
+        text-align: left;
+    }
+
+    .product-name {
+        font-size: 16px;
+    }
+
+    .price-box .price {
+        font-size: 14px;
+    }
 }

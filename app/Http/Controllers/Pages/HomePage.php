@@ -24,31 +24,31 @@ class HomePage extends Controller
   public function __invoke()
   {
 
- $products = Product::select('id', 'name', 'image', 'slug', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'rate')
-    ->whereHas('product_detail', function (Builder $query) {
+    $products = Product::select('id', 'name', 'image', 'slug', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'rate')
+      ->whereHas('product_detail', function (Builder $query) {
         $query->where('quantity', '>', 0);
-    })
-    ->with([
+      })
+      ->with([
         'product_detail' => function ($query) {
-            $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
-                ->where('quantity', '>', 0)
-                ->orderBy('sale_price', 'ASC');
+          $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
+            ->where('quantity', '>', 0)
+            ->orderBy('sale_price', 'ASC');
         },
         'productImages' => function ($query) {
-            $query->select('product_images.id', 'product_detail_id', 'image_name'); // chỉ định rõ trường id ở đây
+          $query->select('product_images.id', 'product_detail_id', 'image_name'); // chỉ định rõ trường id ở đây
         },
-    ])
-    ->latest()
-    ->limit(9)
-    ->get();
-        // dd ($products->toArray());
-    $favorite_products = Product::select('id','name', 'image','slug', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'rate')
-    ->whereHas('product_detail', function (Builder $query) {
+      ])
+      ->latest()
+      ->limit(8)
+      ->get();
+    // dd ($products->toArray());
+    $favorite_products = Product::select('id', 'name', 'image', 'slug', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'rate')
+      ->whereHas('product_detail', function (Builder $query) {
         $query->where('quantity', '>', 0);
-    })
-    ->with(['product_detail' => function($query) {
-      $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->where('quantity', '>', 0)->orderBy('sale_price', 'ASC');
-    }])->latest()->orderBy('rate', 'DESC')->limit(10)->get();
+      })
+      ->with(['product_detail' => function ($query) {
+        $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->where('quantity', '>', 0)->orderBy('sale_price', 'ASC');
+      }])->latest()->orderBy('rate', 'DESC')->limit(10)->get();
 
     $producers = Producer::select('id', 'name')->get();
 
@@ -59,7 +59,7 @@ class HomePage extends Controller
     ])->latest()->limit(5)->get(['product_id', 'title', 'image']);
 
     $posts = Post::select('id', 'title', 'image', 'created_at')->latest()->limit(4)->get();
-        // dd($products);
-    return view('pages.home')->with('data',['products' => $products, 'favorite_products'=>$favorite_products, 'posts'=> $posts, 'advertises' => $advertises, 'producers' => $producers]);
+    // dd($products);
+    return view('pages.home')->with('data', ['products' => $products, 'favorite_products' => $favorite_products, 'posts' => $posts, 'advertises' => $advertises, 'producers' => $producers]);
   }
 }
