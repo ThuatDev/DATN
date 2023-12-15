@@ -23,7 +23,7 @@ class ProductController extends Controller
 public function index(Request $request)
 {
     // Lấy danh sách products với thông tin từ category
-    $products = Product::select('id', 'producer_id', 'name', 'slug','image', 'sku_code', 'OS', 'rate', 'created_at')
+    $products = Product::select('id', 'producer_id', 'name', 'slug', 'image', 'sku_code', 'OS', 'rate', 'created_at', 'discount', 'flash_sale', 'start_date', 'end_date')
         ->whereHas('product_details', function ($query) {
             $query->where('import_quantity', '>', 0);
         })
@@ -31,12 +31,14 @@ public function index(Request $request)
             'producer' => function ($query) {
                 // Thay đổi để load thông tin từ category
                 $query->select('id', 'category_id')->with('category:id,name');
-            }
+            },
+            'product_details' => function ($query) {
+                $query->select('id', 'product_id', 'quantity', 'sale_price')
+                    ->where([['import_quantity', '>', 0], ['quantity', '>', 0]]);
+            },
         ])
         ->withCount([
-            'product_details' => function ($query) {
-                $query->where([['import_quantity', '>', 0], ['quantity', '>', 0]]);
-            }
+            'product_details'
         ])->latest()->get();
 
     // Lấy danh sách types từ các categories
@@ -44,13 +46,53 @@ public function index(Request $request)
     $types = $categories->pluck('name')->toArray();
 
     $selectedType = $request->input('type');
-
-
-    // dd($selectedType);
-
+            // dd($products->toArray());
     return view('admin.product.index', compact('products', 'types', 'selectedType'));
-}
+        }
 
+public function saveFlashSale(Request $request)
+{
+    try {
+        $flashSaleData = $request->all(); // Lấy tất cả dữ liệu từ form
+
+        foreach ($flashSaleData['id'] as $key => $productId) {
+            $product = Product::find($productId);
+
+            if ($product) {
+                // Nếu giá trị discount là null, thì xóa dữ liệu, ngược lại thì cập nhật
+                if ($flashSaleData['discount'][$key] === null) {
+                    $product->discount = 0;
+                    $product->start_date =  null;
+                    $product->end_date =  null;
+                    $product->save();
+                } else {
+                    // Kiểm tra giá trị discount trước khi lưu
+                    $discountValue = is_numeric($flashSaleData['discount'][$key]) ? $flashSaleData['discount'][$key] : null;
+
+                    // Chỉ lưu giá trị khi nó không phải là null
+                    if ($discountValue !== null) {
+                        $product->discount = $discountValue;
+                        $product->start_date = $flashSaleData['start_date'][$key];
+                        $product->end_date = $flashSaleData['end_date'][$key];
+                        $product->save();
+                    }
+                }
+            }
+        }
+
+        return redirect()->route('admin.product.index')->with(['alert' => [
+            'type' => 'success',
+            'title' => 'Thành Công',
+            'content' => 'Cập nhật Flash Sale thành công.'
+        ]]);
+
+    } catch (\Exception $e) {
+        dd($e->getMessage());
+        return response()->json([
+            'message' => 'Có lỗi xảy ra, vui lòng thử lại sau.'
+        ], 500);
+    }
+}
   public function delete(Request $request)
   {
     $product = Product::whereHas('product_details', function (Builder $query) {
@@ -294,7 +336,7 @@ if ($selectedCategory !== null) {
             // Xử lý khi là Đồng Hồ, bỏ qua các thông số không cần thiết
             $product->producer_id = $request->producer_id;
             $product->sku_code = $request->sku_code;
-            $product->sku_code = null;
+
             $product->monitor = null;
             $product->front_camera = null;
             $product->rear_camera = null;
@@ -307,7 +349,7 @@ if ($selectedCategory !== null) {
         } elseif ($categories[$categoryId] == 'Phụ Kiện') {
             // Xử lý khi là Phụ Kiện, bỏ qua các thông số không cần thiết
                      $product->sku_code = $request->sku_code;
-            $product->sku_code = null;
+
             $product->monitor = null;
             $product->front_camera = null;
             $product->rear_camera = null;

@@ -195,7 +195,7 @@
 }
 
 .product-thumbnail__img--primary {
-    max-width: 80%; /* Đặt chiều rộng tối đa của ảnh thứ nhất */
+    max-width: 70%; /* Đặt chiều rộng tối đa của ảnh thứ nhất */
     height: auto;
     object-fit: cover;
 }

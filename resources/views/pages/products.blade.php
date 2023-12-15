@@ -1,7 +1,26 @@
 @extends('layouts.master')
 
 @section('title', 'Sản Phẩm')
+    <style>
+        /* File CSS hoặc trực tiếp trong Blade template */
+/* Tô màu cam cho background khi hover */
+.pagination a:hover {
+    background-color: #ff9800; /* Mã màu cam */
+    color: #fff; /* Màu chữ trắng */
+}
+.pagination .active .page-link  {
+ /* Mã màu cam */
+ background-color: #ff9800 !important ;
+ border: 1px solid #ff9800 !important ;
 
+}
+/* Tô màu cam nhạt cho trang hiện tại */
+.pagination .active a {
+    background-color: #ffc107; /* Mã màu cam nhạt */
+    color: #fff; /* Màu chữ trắng */
+}
+
+    </style>
 @section('content')
 
   <section class="bread-crumb">
@@ -109,54 +128,88 @@
         @else
           <div class="row">
             @foreach($data['products'] as $key => $product)
-              <div class="col-md-2 col-md-20">
-                <div class="item-product">
-                  <a href="{{ route('product_page', ['id' => $product->id]) }}" title="{{ $product->name }}">
-                    <div class="row">
-                      <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="image-product" style="background-image: url('{{ Helper::get_image_product_url($product->image) }}');padding-top: 100%;">
-                          {!! Helper::get_promotion_percent($product->product_detail->sale_price, $product->product_detail->promotion_price, $product->product_detail->promotion_start_date, $product->product_detail->promotion_end_date) !!}
-                        </div>
-                        <div class="content-product">
-                          <h3 class="title">{{ $product->name }}</h3>
-                          <div class="start-vote">
-                            {!! Helper::get_start_vote($product->rate) !!}
-                          </div>
-                          <div class="price">
-                            {!! Helper::get_real_price($product->product_detail->sale_price, $product->product_detail->promotion_price, $product->product_detail->promotion_start_date, $product->product_detail->promotion_end_date) !!}
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-12 col-sm-12 col-xs-12 animate">
-                        <div class="product-details">
-                          <p><strong><i class="fas fa-tv"></i> Màn Hình: </strong>{{ $product->monitor }}</p>
-                          <p><strong><i class="fas fa-camera-retro"></i> Camera Trước: </strong>{{ $product->front_camera }}</p>
-                          <p><strong><i class="fas fa-camera-retro"></i> Camera sau: </strong>{{ $product->rear_camera }}</p>
-                          <p><strong><i class="fas fa-microchip"></i> CPU: </strong>{{ $product->CPU }}</p>
-                          <p><strong><i class="fas fa-microchip"></i>GPU: </strong>{{ $product->GPU }}</p>
-                          <p><strong><i class="fas fa-hdd"></i> RAM: </strong>{{ $product->RAM }}GB</p>
-                          <p><strong><i class="fas fa-hdd"></i> Bộ Nhớ Trong: </strong>{{ $product->ROM }}GB</p>
-                          @if(Str::is('*Android*', $product->OS_version))
-                            <p><strong><i class="fab fa-android"></i> HĐH: </strong>{{ $product->OS_version }}</p>
-                          @elseif(Str::is('*IOS*', $product->OS_version))
-                            <p><strong><i class="fab fa-apple"></i> HĐH: </strong>{{ $product->OS_version }}</p>
-                          @elseif(Str::is('*Windows*', $product->OS_version))
-                            <p><strong><i class="fab fa-windows"></i> HĐH: </strong>{{ $product->OS_version }}</p>
-                          @endif
-                          <p><strong><i class="fas fa-battery-full"></i> Dung Lượng PIN: </strong>{{ $product->pin }}</p>
-                        </div>
-                      </div>
+                <div class="col-lg-15 col-md-3  product-col p-2">
+            <a href="{{ route('product_page', ['id' => $product->slug]) }}" title="{{ $product->name }}">
+                <div class="box-hover">
+
+                <img
+                  src="{{ Helper::get_image_product_url($product->image) }}"
+                    alt=""
+                    class="img-first"
+
+              />  <img
+                  src="{{ Helper::get_image_product_url(  $product->productImages->image_name) }}"
+                  alt=""
+                    class="img-change"
+                />
+
+               </div>
+                <div class="px-3">
+                    <h5 class="product-name-1 text-center">
+                        <a class="txt-black" href="{{ route('product_page', ['id' => $product->slug]) }}"
+                            title="{{ $product->name }}">{{ $product->name }}</a>
+                    </h5>
+                    <div class="position-relative">
+                        {!! Helper::get_promotion_html($product->product_detail->promotion_price,
+                        $product->product_detail->sale_price,) !!}
+                        <button
+                    data-href="/dien-thoai-iphone-13"
+                    data-handle="dien-thoai-iphone-13"
+                    class="product-item-btn btn left-to quick-view"
+                    title="Tùy chọn"
+                    type="button"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="100px"
+                      height="100px"
+                      viewBox="0 0 512 512"
+                    >
+                      <defs>
+                        <style>
+                          .cls-1 {
+                            fill: #f19ec3;
+                          }
+                        </style>
+                      </defs>
+
+                      <title />
+
+                      <g data-name="Layer 9" id="Layer_9">
+                        <path
+                          class="cls-1"
+                          d="M152,164,133.43,378l-.43,5s9,30,45,30h78V164Z"
+                        />
+
+                        <path
+                          d="M388,376.15,369,162.31a8.13,8.13,0,0,0-8.19-7.44h-40a64.57,64.57,0,0,0-129.13,0h-40a8.23,8.23,0,0,0-8.19,7.44l-19,213.83v.75c0,23.82,21.91,43.2,48.8,43.2H339.2c26.89,0,48.8-19.38,48.8-43.2ZM256.28,106.76a48.25,48.25,0,0,1,48.19,48.12H208.09A48.25,48.25,0,0,1,256.28,106.76ZM339.2,403.65H173.35c-17.75,0-32.21-11.81-32.42-26.48l18.29-205.91h32.49V200a8.19,8.19,0,0,0,16.38,0V171.26h96.37V200a8.19,8.19,0,1,0,16.38,0V171.26h32.49l18.29,206C371.41,391.84,356.95,403.65,339.2,403.65Z"
+                        />
+
+                        <path
+                          d="M290.33,260.87,242,309.19l-19.72-19.72a8.2,8.2,0,1,0-11.6,11.6l25.53,25.53A8.22,8.22,0,0,0,242,329a8.34,8.34,0,0,0,5.8-2.39l54.12-54.12a8.2,8.2,0,0,0,0-11.6A8.32,8.32,0,0,0,290.33,260.87Z"
+                        />
+                      </g>
+                    </svg>
+                  </button>
                     </div>
-                  </a>
+                    <span class="product-promo-tag product-promo-tag--3 product-promo-tag--text-2 px-2"
+                        style="color: #8f8f8f; background: #e0dbdb4f; border: #ff1010">
+                        Tặng gói bảo hành Gold trị giá 300K
+                    </span>
                 </div>
-              </div>
+            </a>
+        </div>
             @endforeach
           </div>
         @endif
       </div>
-      <div class="section-footer text-center">
+      {{-- <div class="section-footer text-center">
         {{ $data['products']->appends(Request::query())->links() }}
-      </div>
+      </div> --}}
+      <div class="section-footer text-center">
+     {{ $data['products']->appends(Request::query())->links('pagination::bootstrap-4') }}
+</div>
+
     </section>
   </div>
 

@@ -44,7 +44,10 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
 
     // Products
     Route::get('products', 'Admin\ProductController@index')->name('product.index');
-    Route::get('product/new', 'Admin\ProductController@new')->name('product.new');
+ Route::post('product/save-flash-sale', 'Admin\ProductController@saveFlashSale')->name('product.save_flash_sale');
+
+Route::get('product/new', 'Admin\ProductController@new')->name('product.new');
+
     Route::post('product/save', 'Admin\ProductController@save')->name('product.save');
     Route::post('product/delete', 'Admin\ProductController@delete')->name('product.delete');
     Route::get('product/{id}/edit', 'Admin\ProductController@edit')->name('product.edit');

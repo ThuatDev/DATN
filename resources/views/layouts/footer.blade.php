@@ -20,7 +20,27 @@
               <h3>{{ __('footer.support') }}</h3>
             </div>
             <div class="widget-content">
-              <ul>
+              <ul class="list-menu toggle-mn">
+
+                <li class="li_menu">
+                  <a class="link" href="#" title="Giới thiệu">Giới thiệu</a>
+                </li>
+
+                <li class="li_menu">
+                  <a class="link" href="#" title="Liên hệ">Liên hệ</a>
+                </li>
+
+
+
+
+                <li class="li_menu">
+                  <a class="link" href="#" title="Hướng dẫn mua hàng Online">Hướng dẫn mua hàng Online</a>
+                </li>
+
+
+                <li class="li_menu">
+                  <a class="link" href="#" title="Câu hỏi thường gặp">Câu hỏi thường gặp</a>
+                </li>
 
               </ul>
             </div>
@@ -40,29 +60,43 @@
                   <div class="col-md-3 col-sm-3 col-xs-3 padding-lr5" title="{{ __('footer.cod') }}"><div class="payment"><img src="{{ asset('images/cod.png') }}"></div></div>
                 </li>
                 <li>
-                  {{-- <div class="payment-service" title="{{ __('footer.nganluong') }}"><img src="{{ asset('images/nganluong123.png') }}"></div> --}}
+                  <div class="payment-service" title="{{ __('footer.nganluong') }}"><img src="{{ asset('images/nganluong123.png') }}"></div>
               </ul>
             </div>
           </div>
         </div>
-        <div class="col-md-3 col-sm-4 hidden-xs">
+        <div class="col-md-3 hidden-sm hidden-xs">
           <div class="footer-widget">
             <div class="widget-title">
-              <h3>{{ __('footer.FollowUs') }}</h3>
+              <h3>Chính sách</h3>
             </div>
             <div class="widget-content">
-            <!-- nhúng iframe facebook tại đây -->
+              <ul class="list-menu toggle-mn">
+
+                <li class="li_menu">
+                  <a class="link" href="/chinh-sach-bao-mat" title="Chính sách bảo mật">Chính sách bảo mật</a>
+                </li>
+
+                <li class="li_menu">
+                  <a class="link" href="/chinh-sach-doi-tra" title="Chính sách đổi trả">Chính sách đổi trả</a>
+                </li>
+
+                <li class="li_menu">
+                  <a class="link" href="/chinh-sach-bao-hanh" title="Chính sách bảo hành">Chính sách bảo hành</a>
+                </li>
+
+                <li class="li_menu">
+                  <a class="link" href="/chinh-sach-dat-coc-giu-hang" title="Chính sách đặt cọc giữ hàng">Chính sách đặt cọc giữ hàng</a>
+                </li>
+
+              </ul>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="footer-bottom">
-    <div class="copyright text-center">
-      Copyright &copy 2023 Văn duy. All rights reserved.
-    </div>
-  </div>
+
 </footer>
 
 

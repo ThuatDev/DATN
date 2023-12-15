@@ -13,7 +13,35 @@
 .item-category {
     display: flex;
     flex-direction: column;
-    
+}
+.tabs li.current {
+    color: #fff;
+    background: #dd0115;
+    border-color: #dd0115;
+}
+.tabs-group {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+.tabs li {
+    position: relative;
+    border-radius: 4px;
+    white-space: nowrap;
+    color: #333333;
+    border: 1px solid #f1f1f1;
+    font-size: 14px;
+    user-select: none;
+}
+.tabs li:not(:last-of-type) {
+    margin-right: 0.5rem;
+}
+.tabs li:not(.current) {
+    cursor: pointer;
+}
+.tabs li:hover {
+    color: #dd0115;
+    background: #fff;
+    border-color: #dd0115;
 }
 .item-category span {
     font-size: 1.6rem;
@@ -38,11 +66,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    -webkit-transition:  0.2s ease-in-out;
-    transition:  0.2s ease-in-out;
+    -webkit-transition: 0.2s ease-in-out;
+    transition: 0.2s ease-in-out;
 }
 .link-category:hover {
-    background: linear-gradient(31deg, #1d1d1f 0%, #7d7d88 100%);
+    background: linear-gradient(31deg, #cbcbcc 0%, #bbbbbd 100%);
 }
 .product-name-1 {
     display: -webkit-box;
@@ -95,10 +123,13 @@
 }
 .btn-main-1 {
     border: 1px solid #dd0115 !important;
-    color: #dd0115 !important;
+    color: #dd0115;
     font-size: 14px !important;
 }
-
+.btn-main-1:hover {
+    color: #fff;
+    background: #dd0115;
+}
 @media screen and (max-width: 767px) {
     .product-item-section1 {
         width: 100%;
@@ -182,7 +213,7 @@
 .box-hover img {
     max-width: 100%;
     max-height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     position: absolute;
     top: 0;
     left: 0;
@@ -200,6 +231,7 @@
 
 .box-hover:hover .img-change {
     animation: slideFromBottom 0.5s ease-in-out forwards;
+    object-fit: contain;
 }
 
 @keyframes slideFromBottom {
