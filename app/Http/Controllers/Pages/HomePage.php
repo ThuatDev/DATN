@@ -7,13 +7,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 
-use Illuminate\Database\Query\Expression;
 use App\Models\Product;
 use App\Models\Producer;
 use App\Models\ProductDetail;
 use App\Models\Advertise;
 use App\Models\Post;
-
+use Carbon\Carbon;
 class HomePage extends Controller
 {
   /**
@@ -105,43 +104,54 @@ $product_phukien = Product::select('id', 'name', 'image', 'slug', 'monitor', 'fr
     ->get();
     //   dd ($product_phukien->toArray());
 
-
-
-
-
-
-$favorite_products = Product::select(
-        'products.id', 'producer_id', 'category_id', 'name', 'slug', 'image', 'monitor', 'front_camera', 'rear_camera',
-        'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'information_details', 'product_introduction', 'rate',
-        'products.created_at', 'products.updated_at', 'discount', 'flash_sale', 'start_date', 'end_date',
-        // DB::raw('(CASE WHEN discount > 0 THEN ROUND(product_details.sale_price - (product_details.sale_price * (discount / 100)), 0) ELSE product_details.sale_price END) AS discounted_price'),
-DB::raw('(CASE WHEN discount > 0 AND NOW() BETWEEN start_date AND end_date THEN ROUND(product_details.sale_price - (product_details.sale_price * (discount / 100)), 0) ELSE product_details.sale_price END) AS discounted_price'),
-
-    DB::raw('(CASE WHEN discount > 0 AND NOW() BETWEEN start_date AND end_date THEN CONVERT_TZ(NOW(), "+00:00", "+07:00") ELSE NULL END) AS current_time'),
-
-    DB::raw('(CASE WHEN discount > 0 AND NOW() BETWEEN start_date AND end_date THEN TIMESTAMPDIFF(MINUTE, start_date, end_date) ELSE NULL END) AS remaining_minutes')
-)
-    ->join('product_details', 'products.id', '=', 'product_details.product_id')
-    ->where('product_details.quantity', '>', 0)
-    ->where('discount', '>', 0)
-    ->orderByDesc('rate')
-    ->limit(5)
+$favorite_products = Product::select('id', 'name', 'image', 'slug', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'rate', 'discount', 'start_date', 'end_date', 'category_id')
+    ->whereHas('product_detail', function (Builder $query) {
+        $query->where('quantity', '>', 0);
+    })
+    ->whereNotNull('start_date')
+    ->whereNotNull('end_date')
+    ->with(['product_detail' => function ($query) {
+        $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
+            ->where('quantity', '>', 0)
+            ->orderBy('sale_price', 'ASC');
+    },    'productImages' => function ($query) {
+            $query->select('product_images.id', 'product_detail_id', 'image_name'); // chỉ định rõ trường id ở đây
+        },
+    ])
+    ->latest()
+    ->orderBy('rate', 'DESC')
+    ->limit(10)
     ->get();
 
-// Tính giá còn lại của 5 sản phẩm và lưu vào biến riêng
-$remaining_prices = [];
+// Thêm trường giá flash sale và thời gian giảm giá còn lại
 foreach ($favorite_products as $product) {
-    if ($product->remaining_minutes !== null) {
-        $remaining_hours = floor($product->remaining_minutes / 60);
-        $remaining_minutes = $product->remaining_minutes % 60;
-        $remaining_prices[$product->id] = "$remaining_hours giờ $remaining_minutes phút";
+    // Tính giá sau khi giảm giá
+    $discountedPrice = $product->product_detail->sale_price - ($product->product_detail->sale_price * $product->discount / 100);
+
+    // Cập nhật giá flash sale vào sản phẩm
+    $product->flash_sale_price = $discountedPrice;
+
+    // Tính thời gian giảm giá còn lại
+    $now = Carbon::now();
+    $promotionEndDate = Carbon::parse($product->end_date);
+
+    // Kiểm tra xem thời gian kết thúc có lớn hơn thời gian hiện tại không
+    if ($now->lessThan($promotionEndDate)) {
+          $remainingTime = $now->diff($promotionEndDate)->format('%H giờ %i phút %s giây');
+        $totalSeconds = $now->diffInSeconds($promotionEndDate);
+        $product->remaining_time = $remainingTime;
+        $product->total_seconds = $totalSeconds;
+    } else {
+        $product->remaining_time = 'Đã kết thúc';
+        $product->total_seconds = 0;
     }
 }
 
-    dd ($favorite_products->toArray());
+// dd($favorite_products->toArray());
 
-    $producers = Producer::select('id', 'name')->get();
+//     dd ($favorite_products->toArray());
 
+        $producers = Producer::select('id', 'name')->get();
     $advertises = Advertise::where([
       ['start_date', '<=', date('Y-m-d')],
       ['end_date', '>=', date('Y-m-d')],
@@ -152,6 +162,6 @@ foreach ($favorite_products as $product) {
     // dd($products);
     return view('pages.home')->with('data', [ 'product_phone' => $product_phone,
     'product_watch' => $product_watch,
-    'product_phukien' => $product_phukien,'favorite_products' => $favorite_products, 'posts' => $posts, 'advertises' => $advertises, 'producers' => $producers  ,'remaining_prices' => $remaining_prices]);
+    'product_phukien' => $product_phukien,'favorite_products' => $favorite_products, 'posts' => $posts, 'advertises' => $advertises, 'producers' => $producers]);
   }
 }

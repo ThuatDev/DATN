@@ -185,45 +185,68 @@ public function index(Request $request)
 //   }
 public function getProduct(Request $request, $slug)
 {
+    // Fetch advertisements
     $advertises = Advertise::where([
-        ['start_date', '<=', date('Y-m-d')],
-        ['end_date', '>=', date('Y-m-d')],
+        ['start_date', '<=', now()],
+        ['end_date', '>=', now()],
         ['at_home_page', '=', false]
     ])->latest()->limit(5)->get(['product_id', 'title', 'image']);
 
-    $product = Product::select('id', 'producer_id', 'name', 'sku_code', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'rate', 'information_details', 'product_introduction')
+    // Fetch the main product
+    $product = Product::select('id', 'producer_id', 'name', 'sku_code', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'rate', 'information_details', 'product_introduction', 'discount', 'start_date', 'end_date')
         ->whereHas('product_details', function (Builder $query) {
             $query->where('import_quantity', '>', 0);
         })
         ->where('slug', $slug)
-        ->with(['promotions' => function ($query) {
-            $query->select('id', 'product_id', 'content')
-                ->where([
-                    ['start_date', '<=', date('Y-m-d')],
-                    ['end_date', '>=', date('Y-m-d')]
-                ])
-                ->latest();
-        }])
-        ->with(['producer' => function ($query) {
-            $query->select('id', 'name');
-        }])
+        ->with([
+            'promotions' => function ($query) {
+                $query->select('id', 'product_id', 'content')
+                    ->where([
+                        ['start_date', '<=', now()],
+                        ['end_date', '>=', now()]
+                    ])
+                    ->latest();
+            },
+            'producer' => function ($query) {
+                $query->select('id', 'name');
+            }
+        ])
         ->first();
 
     if (!$product) {
         abort(404);
     }
 
-    $product_details = ProductDetail::where([
+    // Fetch product details
+     $product_details = ProductDetail::where([
         ['product_id', $product->id],
         ['import_quantity', '>', 0]
     ])->with([
         'product_images' => function ($query) {
             $query->select('id', 'product_detail_id', 'image_name');
         }
-    ])->select('id', 'color', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date', 'capacity')->where('quantity', '>', 0)->orderBy('sale_price', 'ASC')
+    ])->select('id', 'color', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date', 'capacity')
+        ->where('quantity', '>', 0)
+        ->orderBy('sale_price', 'ASC')
         ->get();
 
-    $suggest_products = Product::select('id','name', 'image', 'rate')
+    // Additional logic for checking and calculating discounted price
+    $discountedPrice = null;
+
+    if ($product->discount > 0 && $product->start_date <= now() && $product->end_date >= now()) {
+        // Assuming the first product_detail represents the main variant
+        $mainVariant = $product->product_details->first();
+        $discountedPrice = $mainVariant->sale_price * (1 - $product->discount / 100);
+
+        // Add discountedPrice to each product_detail
+        foreach ($product_details as $product_detail) {
+            $product_detail->discountedPrice = $discountedPrice;
+        }
+    }
+// dd ($product_details);
+        // dd ($product_details);
+    // Fetch suggested products
+    $suggest_products = Product::select('id', 'name', 'image', 'rate')
         ->whereHas('product_detail', function (Builder $query) use ($product) {
             $query->where('quantity', '>', 0);
         })
@@ -231,26 +254,45 @@ public function getProduct(Request $request, $slug)
             ['producer_id', $product->producer_id],
             ['id', '<>', $product->id]
         ])
-        ->with(['product_detail' => function($query) {
-            $query->select('id','product_id','color','quantity','sale_price','promotion_price','promotion_start_date','promotion_end_date' ,'capacity')->where('quantity', '>', 0)->orderBy('sale_price', 'ASC')
-                ->where('quantity','>',0);
-        }])
-        ->orderBy('rate','desc')
+        ->with([
+            'product_detail' => function ($query) {
+                $query->select('id', 'product_id', 'color', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date', 'capacity')
+                    ->where('quantity', '>', 0)
+                    ->orderBy('sale_price', 'ASC')
+                    ->where('quantity', '>', 0);
+            }
+        ])
+        ->orderBy('rate', 'desc')
         ->limit(5)
         ->get();
 
+    // Fetch product votes
     $product_votes = ProductVote::whereHas('user', function (Builder $query) {
-            $query->where([
-                ['active', true],
-                ['admin', false]
-            ]);
-        })
+        $query->where([
+            ['active', true],
+            ['admin', false]
+        ]);
+    })
         ->where('product_id', $product->id)
-        ->with(['user' => function($query) {
-            $query->select('id', 'name', 'avatar_image');
-        }])
+        ->with([
+            'user' => function ($query) {
+                $query->select('id', 'name', 'avatar_image');
+            }
+        ])
         ->latest()
         ->get();
+
+    // Additional logic for checking and calculating discounted price
+    // $discountedPrice = null;
+
+
+    // if ($product->discount > 0 && $product->start_date <= now() && $product->end_date >= now()) {
+    //     // Assuming the first product_detail represents the main variant
+    //     $mainVariant = $product->product_details->first();
+    //     $discountedPrice = $mainVariant->sale_price * (1 - $product->discount / 100);
+    // }
+    // dd($discountedPrice) ;
+    // Retur
 // dd ($product);
     return view('pages.product')->with([
         'data' => [
@@ -258,7 +300,8 @@ public function getProduct(Request $request, $slug)
             'product' => $product,
             'product_details' => $product_details,
             'suggest_products' => $suggest_products,
-            'product_votes' => $product_votes
+            'product_votes' => $product_votes,
+            'discountedPrice' => $discountedPrice
 
         ]
     ]);

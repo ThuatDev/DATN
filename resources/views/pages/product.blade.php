@@ -59,28 +59,37 @@
 
                 <div class="col-md-6 col-sm-6">
                   <div class="price-product">
-                    @foreach($data['product_details'] as $key => $product)
-                      @if($key)
-                      <div class="product-{{ $key }}" style="display: none;">
-                      @else
-                      <div class="product-{{ $key }}">
-                      @endif
-                        @if($product->promotion_price != null && $product->promotion_start_date <= date('Y-m-d') && $product->promotion_end_date >= date('Y-m-d'))
-                          <div class="sale-price">{{ number_format($product->promotion_price,0,',','.') }} <span>VNĐ</span></div>
-                          <div class="promotion-price">
-                            <div class="old-price">Giá cũ: <del>{{ number_format($product->sale_price,0,',','.') }}</del> <span>VNĐ</span></div>
-                            <div class="save-price">Giảm: <span>{{ number_format($product->sale_price - $product->promotion_price,0,',','.') }}</span> <span>VNĐ</span></div>
-                          </div>
-                        @else
-                          <div class="sale-price">{{ number_format($product->sale_price,0,',','.') }} <span>VNĐ</span></div>
-                        @endif
-                        @if($product->quantity > 0)
-                          <div class="status">Tình trạng: <span style="color: #1a2;">Còn hàng</span></div>
-                        @else
-                          <div class="status">Tình trạng: <span style="color: #f30;">Hết hàng</span></div>
-                        @endif
-                      </div>
-                    @endforeach
+                  @foreach($data['product_details'] as $key => $product)
+    @if($key)
+        <div class="product-{{ $key }}" style="display: none;">
+    @else
+        <div class="product-{{ $key }}">
+    @endif
+        @if(isset($product->discountedPrice))
+
+            <div class="sale-price">{{ number_format($product->discountedPrice, 0, ',', '.') }} <span>VNĐ</span></div>
+        @else
+            {{-- If no discounted price, check for promotion --}}
+            @if($product->promotion_price != null && $product->promotion_start_date <= now() && $product->promotion_end_date >= now())
+                {{-- Display flash sale price if promotion is active --}}
+                <div class="sale-price">{{ number_format($product->promotion_price, 0, ',', '.') }} <span>VNĐ</span></div>
+                <div class="promotion-price">
+                    <div class="old-price">Giá cũ: <del>{{ number_format($product->sale_price, 0, ',', '.') }}</del> <span>VNĐ</span></div>
+                    <div class="save-price">Giảm: <span>{{ number_format($product->sale_price - $product->promotion_price, 0, ',', '.') }}</span> <span>VNĐ</span></div>
+                </div>
+            @else
+                {{-- Display regular price if no promotion --}}
+                <div class="sale-price">{{ number_format($product->sale_price, 0, ',', '.') }} <span>VNĐ</span></div>
+            @endif
+        @endif
+        @if($product->quantity > 0)
+            <div class="status">Tình trạng: <span style="color: #1a2;">Còn hàng</span></div>
+        @else
+            <div class="status">Tình trạng: <span style="color: #f30;">Hết hàng</span></div>
+        @endif
+    </div>
+@endforeach
+
                   </div>
                   <div class="color-product">
                      <div class="title">Màu sắc:</div>
