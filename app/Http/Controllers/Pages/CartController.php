@@ -18,24 +18,12 @@ use App\NL_Checkout;
 
 class CartController extends Controller
 {
-  public function addCart(Request $request) {
-
-   $product = ProductDetail::where('product_details.id', $request->id)
-        ->join('products', 'product_details.product_id', '=', 'products.id')
-        ->select(
-            'product_details.id',
-            'product_details.product_id',
-            'product_details.color',
-            'product_details.quantity',
-            'product_details.sale_price',
-            'product_details.promotion_price',
-            'product_details.promotion_start_date',
-            'product_details.promotion_end_date',
-            'product_details.capacity',
-            'products.discount',
-            'products.start_date',
-            'products.end_date'
-        )
+public function addCart(Request $request) {
+    $product = ProductDetail::where('id', $request->id)
+        ->with(['product' => function($query) {
+            $query->select('id', 'name', 'image', 'sku_code', 'RAM', 'ROM');
+        }])
+        ->select('id', 'product_id', 'color', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date', 'capacity', 'discount', 'start_date', 'end_date', 'discountedPrice')
         ->first();
 
     if (!$product) {
@@ -43,24 +31,21 @@ class CartController extends Controller
         return response()->json($data, 404);
     }
 
-
-    // Additional logic for checking and calculating discounted price
-    $discountedPrice = $product->sale_price;
-
-    if ($product->product->discount > 0 && $product->product->start_date <= now() && $product->product->end_date >= now()) {
-        $discountedPrice = $product->sale_price * (1 - $product->product->discount / 100);
-
-        // Assign the discountedPrice to the promotion_price
-        $product->sale_price = $discountedPrice;
+    // Kiểm tra ngày giờ để xác định giảm giá có hiệu lực hay không
+    $now = now();
+    if ($product->start_date <= $now && $product->end_date >= $now) {
+        // Ngày giảm giá hiệu lực
+        $discountedPrice = $product->discountedPrice;
+    } else {
+        // Ngày giảm giá đã hết hiệu lực, sử dụng giá bán thường
+        $discountedPrice = $product->sale_price;
     }
 
-    $oldCart = Session::has('cart') ? Session::get('cart') : NULL;
+    $oldCart = Session::has('cart') ? Session::get('cart') : null;
     $cart = new Cart($oldCart);
 
-    if (!$cart->add($product, $product->id, $request->qty)) {
-        $data['msg'] = 'Số lượng sản phẩm trong giỏ vượt quá số lượng sản phẩm trong kho!';
-        return response()->json($data, 412);
-    }
+    // Set giá trị giảm giá trực tiếp trong đối tượng cart
+    $cart->add($product, $product->id, $request->qty, $discountedPrice);
 
     Session::put('cart', $cart);
 
@@ -69,7 +54,8 @@ class CartController extends Controller
     $data['response'] = Session::get('cart');
 
     return response()->json($data, 200);
-  }
+}
+
 
   public function removeCart(Request $request) {
 
@@ -133,19 +119,22 @@ class CartController extends Controller
     return response()->json($data, 200);
   }
 
-public function showCart()
+ public function showCart()
 {
+    // Log a message to Laravel's default log file (storage/logs/laravel.log)
+
+
     $advertises = Advertise::where([
-        ['start_date', '<=', now()],
-        ['end_date', '>=', now()],
+        ['start_date', '<=', date('Y-m-d')],
+        ['end_date', '>=', date('Y-m-d')],
         ['at_home_page', '=', false]
     ])->latest()->limit(5)->get(['product_id', 'title', 'image']);
 
     $oldCart = Session::has('cart') ? Session::get('cart') : null;
     $cart = new Cart($oldCart);
 
-    // Check and update cart items with discounted prices
-
+    // Dump and die to see the contents of $advertises and $cart
+    dd( $cart);
 
     return view('pages.cart')->with(['cart' => $cart, 'advertises' => $advertises]);
 }
@@ -163,7 +152,7 @@ public function showCheckout(Request $request)
                 ->first();
 
             // Debug - Hiển thị thông tin sản phẩm
-            // dd($product);
+            dd($product);
 
             $cart = new Cart(NULL);
             if (!$cart->add($product, $product->id, $request->qty)) {
@@ -175,7 +164,7 @@ public function showCheckout(Request $request)
             }
 
             // Debug - Hiển thị thông tin giỏ hàng
-            // dd($cart);
+            dd($cart);
 
             return view('pages.checkout')->with(['cart' => $cart, 'payment_methods' => $payment_methods, 'buy_method' => $request->type]);
         } elseif ($request->has('type') && $request->type == 'buy_cart') {
@@ -184,14 +173,14 @@ public function showCheckout(Request $request)
             $oldCart = Session::has('cart') ? Session::get('cart') : NULL;
 
             // Debug - Hiển thị thông tin giỏ hàng cũ
-            // dd($oldCart);
+            dd($oldCart);
 
             $cart = new Cart($oldCart);
             $cart->update();
             Session::put('cart', $cart);
 
             // Debug - Hiển thị thông tin giỏ hàng mới
-            // dd($cart);
+            dd($cart);
 
             return view('pages.checkout')->with(['cart' => $cart, 'payment_methods' => $payment_methods, 'buy_method' => $request->type]);
         }

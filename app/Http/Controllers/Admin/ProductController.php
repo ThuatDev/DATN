@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 // thêm use Str
-
+use Illuminate\Support\Facades\DB;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Producer;
@@ -50,11 +50,13 @@ public function index(Request $request)
     return view('admin.product.index', compact('products', 'types', 'selectedType'));
         }
 
+
 public function saveFlashSale(Request $request)
 {
     try {
         $flashSaleData = $request->all(); // Lấy tất cả dữ liệu từ form
 
+        // Lưu thông tin flash sale cho sản phẩm trong bảng products
         foreach ($flashSaleData['id'] as $key => $productId) {
             $product = Product::find($productId);
 
@@ -80,6 +82,34 @@ public function saveFlashSale(Request $request)
             }
         }
 
+        // Lưu thông tin flash sale cho các sản phẩm trong bảng product_details có id trùng với id trong bảng products
+        $productIds = $flashSaleData['id'];
+        $productDetails = ProductDetail::whereIn('product_id', $productIds)->get();
+
+        foreach ($productDetails as $productDetail) {
+            $key = array_search($productDetail->product_id, $productIds);
+
+            if ($flashSaleData['discount'][$key] === null) {
+                $productDetail->discount = 0;
+                $productDetail->start_date = null;
+                $productDetail->end_date = null;
+                $productDetail->discountedPrice = $productDetail->sale_price; // Giá giảm giá mặc định bằng giá bán
+                $productDetail->save();
+            } else {
+                $discountValue = is_numeric($flashSaleData['discount'][$key]) ? $flashSaleData['discount'][$key] : null;
+
+                if ($discountValue !== null) {
+                    $productDetail->discount = $discountValue;
+                    $productDetail->start_date = $flashSaleData['start_date'][$key];
+                    $productDetail->end_date = $flashSaleData['end_date'][$key];
+
+                    $discountedPrice = $productDetail->sale_price * (1 - $productDetail->discount / 100);
+                    $productDetail->discountedPrice = $discountedPrice;
+                    $productDetail->save();
+                }
+            }
+        }
+
         return redirect()->route('admin.product.index')->with(['alert' => [
             'type' => 'success',
             'title' => 'Thành Công',
@@ -93,6 +123,7 @@ public function saveFlashSale(Request $request)
         ], 500);
     }
 }
+
   public function delete(Request $request)
   {
     $product = Product::whereHas('product_details', function (Builder $query) {

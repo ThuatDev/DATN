@@ -13,102 +13,93 @@ $(document).ready(function () {
 });
 
 function htmlItemCart(item, url) {
-    if (item && item.item) {
-        var productName = item.item.product ? item.item.product.name : "";
-        var productColor = item.item.color || "";
-        var productImage = item.item.product ? item.item.product.image : "";
-
-        var html =
-            '<li class="item productid-' +
-            item.item.id +
-            '">' +
-            '<a class="product-image" href="' +
-            url +
-            "/product/" +
-            (item.item.product ? item.item.product.id : "") +
-            '" title="' +
-            productName +
-            " - " +
-            productColor +
-            '">' +
-            '<img alt="' +
-            productName +
-            " - " +
-            productColor +
-            '" src="' +
-            url +
-            "/storage/images/products/" +
-            productImage +
-            '" width="80">' +
-            "</a>" +
-            '<div class="detail-item">' +
-            '<div class="product-details">' +
-            '<a href="javascript:;" data-id="' +
-            item.item.id +
-            '" title="Xóa" class="remove-item-cart fa fa-remove" data-url="' +
-            url +
-            "/cart/remove" +
-            '" onclick="removeItem($(this));">' +
-            '<i class="fas fa-times"></i>' +
-            "</a>" +
-            '<p class="product-name">' +
-            '<a href="' +
-            url +
-            "/product/" +
-            (item.item.product ? item.item.product.id : "") +
-            '" title="' +
-            productName +
-            " - " +
-            productColor +
-            '">' +
-            productName +
-            " - " +
-            productColor +
-            "</a>" +
-            "</p>" +
-            "</div>" +
-            '<div class="product-details-bottom">' +
-            '<span class="price pricechange">' +
-            formatMoney(
-                item.price,
-                "{{amount_no_decimals_with_comma_separator}}₫"
-            ) +
-            "</span>" +
-            '<div class="quantity-select">' +
-            '<input class="variantID" type="hidden" name="variantId" value="' +
-            item.item.id +
-            '">' +
-            '<button onClick="minus(' +
-            item.item.id +
-            ');" class="reduced items-count btn-minus" type="button">–</button>' +
-            '<input type="text" disabled maxlength="3" min="1" max="' +
-            (item.item.quantity || 1) +
-            '" onchange="if(this.value == 0)this.value=1;" class="input-text number-sidebar qty' +
-            item.item.id +
-            '" id="qty' +
-            item.item.id +
-            '" name="Lines" id="updates_' +
-            item.item.id +
-            '" size="4" value="' +
-            item.qty +
-            '" data-url="' +
-            url +
-            "/minicart/update" +
-            '">' +
-            '<button onClick="plus(' +
-            item.item.id +
-            ');" class="increase items-count btn-plus" type="button">+</button>' +
-            "</div>" +
-            "</div>" +
-            "</div>" +
-            "</li>";
-        return html;
-    } else {
-        console.error("Invalid item or item.item:", item);
-        return "";
-    }
+    var html =
+        '<li class="item productid-' +
+        item.item.id +
+        '">' +
+        '<a class="product-image" href="' +
+        url +
+        "/product/" +
+        item.item.product.id +
+        '" title="' +
+        item.item.product.name +
+        " - " +
+        item.item.color +
+        '">' +
+        '<img alt="' +
+        item.item.product.name +
+        " - " +
+        item.item.color +
+        '" src="' +
+        url +
+        "/storage/images/products/" +
+        item.item.product.image +
+        '"width="' +
+        "80" +
+        '">' +
+        "</a>" +
+        '<div class="detail-item">' +
+        '<div class="product-details">' +
+        '<a href="javascript:;" data-id="' +
+        item.item.id +
+        '" title="Xóa" class="remove-item-cart fa fa-remove" data-url="' +
+        url +
+        "/cart/remove" +
+        '" onclick="removeItem($(this));">' +
+        '<i class="fas fa-times"></i>' +
+        "</a>" +
+        '<p class="product-name">' +
+        '<a href="' +
+        url +
+        "/product/" +
+        item.item.product.id +
+        '" title="' +
+        item.item.product.name +
+        " - " +
+        item.item.color +
+        '">' +
+        item.item.product.name +
+        " - " +
+        item.item.color +
+        "</a>" +
+        "</p>" +
+        "</div>" +
+        '<div class="product-details-bottom">' +
+        '<span class="price pricechange">' +
+        formatMoney(
+            item.price,
+            "{{amount_no_decimals_with_comma_separator}}₫"
+        ) +
+        "</span>" +
+        '<div class="quantity-select">' +
+        '<input class="variantID" type="hidden" name="variantId" value="' +
+        item.item.id +
+        '">' +
+        '<button onClick="minus(' +
+        item.item.id +
+        ');" class="reduced items-count btn-minus" type="button">–</button>' +
+        '<input type="text" disabled maxlength="3" min="1" max="' +
+        item.item.quantity +
+        '" onchange="if(this.value == 0)this.value=1;" class="input-text number-sidebar qty' +
+        item.item.id +
+        '" id="qty' +
+        item.item.id +
+        '" name="Lines" id="updates_' +
+        item.item.id +
+        '" size="4" value="' +
+        item.qty +
+        '" data-url="' +
+        url +
+        "/minicart/update" +
+        '">' +
+        '<button onClick="plus(' +
+        item.item.id +
+        ');" class="increase items-count btn-plus" type="button">+</button>' +
+        "</div>" +
+        "</div>" +
+        "</li>";
+    return html;
 }
-
 function htmlCart(cart, url) {
     var html = "";
     if (cart.totalQty == 0) {

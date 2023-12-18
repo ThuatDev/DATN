@@ -22,10 +22,12 @@
         @if($cart->totalQty)
           <ul class="list-item-cart">
             @foreach($cart->items as $key => $item)
+
               <li class="item productid-{{$key}}">
-                <a class="product-image" href="{{ route('product_page', ['id' => $item['item']->product->id]) }}" title="{{ $item['item']->product->name . ' - ' . $item['item']->color }}">
-                  <img alt="{{ $item['item']->product->name . ' - ' . $item['item']->color }}" src="{{ Helper::get_image_product_url($item['item']->product->image) }}" width="80">
-                </a>
+            <a class="product-image" href="{{ route('product_page', ['id' => optional($item['item']->product)->id]) }}" title="{{ optional($item['item']->product)->name . ' - ' . optional($item['item'])->color }}">
+    <img alt="{{ optional($item['item']->product)->name . ' - ' . optional($item['item'])->color }}" src="{{ Helper::get_image_product_url(optional($item['item']->product)->image) }}" width="80">
+</a>
+
                 <div class="detail-item">
                   <div class="product-details">
                     <a href="javascript:;" data-id="{{ $key }}" title="Xóa" class="remove-item-cart fa fa-remove" data-url="{{ route('remove_cart') }}" onclick="removeItem($(this));">

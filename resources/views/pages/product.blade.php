@@ -276,7 +276,7 @@
                 </div>
                 <!-- chi tiet  -->
                <div class="infomation-content">
-  <table class="table table-striped">
+  {{-- <table class="table table-striped">
     <tr>
       <td><label>Màn Hình:</label></td>
       <td>{{ $data['product']->monitor ?: 'Đang Cập Nhật...' }}</td>
@@ -313,7 +313,14 @@
       <td><label>Hệ Điều Hành:</label></td>
       <td>{{ $data['product']->OS ?: 'Đang Cập Nhật...' }}</td>
     </tr>
-  </table>
+  </table> --}}
+      <div class="content">
+            @if($data['product']->product_introduction)
+              {!! $data['product']->information_details !!}
+            @else
+              <p class="text-center"><strong>Đang cập nhật ...</strong></p>
+            @endif
+          </div>
 </div>
 
                 <div class="more-infomation">
