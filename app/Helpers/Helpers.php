@@ -107,4 +107,12 @@ $output = '<del>'.number_format($price,0,',','.').'₫</del><strong>'.number_for
     $param = request()->route()->parameter('id');
     return ($name_route == $route) && ($param == $id) ? 'active' : null;
   }
+//   public  static function get_real_discount ($price) {
+//     $output = '';
+//     if($price->promotion_price != null && $price->promotion_start_date <= date('Y-m-d') && $price->promotion_end_date >= date('Y-m-d'))
+//       $output = round(100 * ($price->price - $price->promotion_price) / $price->price);
+//     return $output;
+//   }
+
+
 }

@@ -53,14 +53,10 @@ formatMoney = function (a, b) {
             ("undefined" == typeof b && (b = 2),
             "undefined" == typeof c && (c = "."),
             "undefined" == typeof d && (d = ","),
-            "number" != typeof a || isNaN(a) || !isFinite(a))
+            "undefined" == typeof a || null == a)
         )
             return 0;
-        var a = a.toFixed(b).toString(), // 123.456 -> 123.46
-            b = a.split("."),
-            c = b[0],
-            d = b.length > 1 ? "." + b[1] : "",
-            e = /(\d+)(\d{3})/;
+        a = Number(a).toFixed(b);
         var e = a.split("."),
             f = e[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1" + c),
             g = e[1] ? d + e[1] : "";

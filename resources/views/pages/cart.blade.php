@@ -54,6 +54,10 @@
                     <div class="info-product">
                       <div class="name"><a href="{{ route('product_page', ['id' => $item['item']->product->id]) }}" target="_blank" title="{{ $item['item']->product->name . ' - ' . $item['item']->color }}">{{ $item['item']->product->name . ' - ' . $item['item']->color }}</a></div>
                       <div class="price">{!! Helper::get_real_price($item['item']->sale_price, $item['item']->promotion_price, $item['item']->promotion_start_date, $item['item']->promotion_end_date) !!}</div>
+                      {{-- cho 1 trường ẩn hiện discout khi có --}}
+                        {{-- @if($item['item']->discount)
+                            <div class="discount">{{ Helper::get_real_discount( $item['item']->discount) }}</div>
+                        @endif --}}
                       <div class="quantity-block">
                         <div class="input-group-btn">
                           <button onclick="minus({{ $key }});" class="reduced_pop items-count btn-minus btn btn-default bootstrap-touchspin-down" type="button">–</button>

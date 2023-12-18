@@ -20,29 +20,38 @@ class Cart
     }
   }
 
-  public function add($item, $id, $qty) {
-
+public function add($item, $id, $qty)
+{
     $this->update();
 
-    if(($item->promotion_price > 0) && ($item->promotion_start_date <= date('Y-m-d')) && ($item->promotion_end_date >= date('Y-m-d')))
-      $storedItem = ['qty' => 0, 'price' => $item->promotion_price, 'item' => $item];
-    else
-      $storedItem = ['qty' => 0, 'price' => $item->sale_price, 'item' => $item];
+    $discountedPrice = $item->sale_price;
 
-    if($this->items && array_key_exists($id, $this->items)) {
-      if(($this->items[$id]['qty'] + $qty) > $this->items[$id]['item']->quantity)
-        return false;
-      else
-        $storedItem = $this->items[$id];
+    if ($item->discount > 0 && $item->start_date <= now() && $item->end_date >= now()) {
+        $discountedPrice = $item->sale_price * (1 - $item->discount / 100);
+    }
+
+    if ($item->promotion_price > 0 && $item->promotion_start_date <= now() && $item->promotion_end_date >= now()) {
+        $storedItem = ['qty' => 0, 'price' => $discountedPrice, 'item' => $item];
+    } else {
+        $storedItem = ['qty' => 0, 'price' => $item->sale_price, 'item' => $item];
+    }
+
+    if ($this->items && array_key_exists($id, $this->items)) {
+        if (($this->items[$id]['qty'] + $qty) > $this->items[$id]['item']->quantity) {
+            return false;
+        } else {
+            $storedItem = $this->items[$id];
+        }
     }
 
     $storedItem['qty'] += $qty;
 
     $this->items[$id] = $storedItem;
     $this->totalQty += $qty;
-    $this->totalPrice += $qty * $this->items[$id]['price'];
+    $this->totalPrice += $qty * $storedItem['price'];
+
     return true;
-  }
+}
 
   public function updateItem($id, $qty) {
     $this->update();
@@ -57,25 +66,52 @@ class Cart
     }
   }
 
-  public function update() {
-    if($this->totalQty == 0) {
-      return false;
+public function update()
+{
+    if ($this->totalQty == 0) {
+        return false;
     } else {
-      $this->totalPrice = 0;
-      foreach($this->items as $key => $item) {
-        $product = ProductDetail::where('id',$key)->with(['product' => function($query) {
-          $query->select('id', 'name', 'image', 'sku_code', 'RAM', 'ROM');
-        }])->select('id', 'product_id', 'color', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->first();
-        $this->items[$key]['item'] = $product;
-        if(($product->promotion_price > 0) && ($product->promotion_start_date <= date('Y-m-d')) && ($product->promotion_end_date >= date('Y-m-d')))
-          $this->items[$key]['price'] = $product->promotion_price;
-        else
-          $this->items[$key]['price'] = $product->sale_price;
-        $this->totalPrice = $this->totalPrice + $this->items[$key]['price'] * $this->items[$key]['qty'];
-      }
-      return true;
+        $this->totalPrice = 0;
+
+        foreach ($this->items as $key => $item) {
+            $product = ProductDetail::where('product_details.id', $key)
+                ->join('products', 'product_details.product_id', '=', 'products.id')
+                ->select(
+                    'product_details.id',
+                    'product_details.product_id',
+                    'product_details.color',
+                    'product_details.quantity',
+                    'product_details.sale_price',
+                    'product_details.promotion_price',
+                    'product_details.promotion_start_date',
+                    'product_details.promotion_end_date',
+                    'product_details.capacity',
+                    'products.discount',
+                    'products.start_date',
+                    'products.end_date'
+                )
+                ->first();
+
+            $this->items[$key]['item'] = $product;
+
+            if ($product->discount > 0 && $product->start_date <= now() && $product->end_date >= now()) {
+                // Calculate discounted price
+                $discountedPrice = $product->sale_price * (1 - $product->discount / 100);
+                $this->items[$key]['price'] = $discountedPrice;
+            } else {
+                if ($product->promotion_price > 0 && $product->promotion_start_date <= now() && $product->promotion_end_date >= now()) {
+                    $this->items[$key]['price'] = $product->promotion_price;
+                } else {
+                    $this->items[$key]['price'] = $product->sale_price;
+                }
+            }
+
+            $this->totalPrice += $this->items[$key]['price'] * $this->items[$key]['qty'];
+        }
+
+        return true;
     }
-  }
+}
 
   public function remove($id) {
     if($this->items && array_key_exists($id, $this->items)) {
