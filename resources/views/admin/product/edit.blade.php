@@ -1,3 +1,4 @@
+
 @extends('admin.layouts.master')
 
 @section('title', 'Chỉnh Sửa Sản Phẩm')
@@ -35,6 +36,27 @@
 @endsection
 
 @section('content')
+<style>
+.upload-image {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.image-preview {
+    max-height: 50vh;
+    max-width: 100%;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+}
+
+.label-title {
+    margin-top: 10px; /* Điều chỉnh khoảng cách giữa hình ảnh và tiêu đề */
+}
+
+</style>
 
 <form id="productForm" action="{{ route('admin.product.update', ['id' => $product->id]) }}" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
   @csrf
@@ -47,16 +69,27 @@
       </div>
     </div>
     <div class="box-body">
-      <div class="row">
-        <div class="col-md-3">
-          <label for="title">Hình Ảnh Hiển Thị <span class="text-red">*</span></label>
+        <div class="container">
+         <div class="row justify-content-center">
+
+           <div class="col-md-12 mx-auto  h-50">
+            {{-- css cho vào giữa   --}}
+
           <div class="upload-image text-center">
-            <div title="Image Preview" class="image-preview" style="background-image: url('{{ Helper::get_image_product_url($product->image) }}'); padding-top: 100%; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 5px; border: 1px solid #f4f4f4;"></div>
+            <span class="label-title text-center">Hình Ảnh Sản Phẩm</span>
+            {{-- <div title="Image Preview" class="image-preview" style="background-image: url('{{ Helper::get_image_product_url($product->image) }}'); padding-top: 100%; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 5px; border: 1px solid #f4f4f4; object-fit: cover;
+            "></div> --}}
+             <img src="{{ Helper::get_image_product_url($product->image) }}" class="image-preview my-5 img-fluid"
+              alt="Image Preview">
+
             <label for="upload" title="Upload Image" class="btn btn-primary btn-sm"><i class="fa fa-folder-open"></i>Chọn Hình Ảnh</label>
             <input type="file" accept="image/*" id="upload" style="display:none" name="image">
           </div>
         </div>
-        <div class="col-md-9">
+        </div>
+        </div>
+      <div class="row">
+        <div class="col-md-12">
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
@@ -83,71 +116,91 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
+     @if(!empty($product->monitor))
+        <div class="col-md-4">
+            <div class="form-group">
                 <label for="monitor">Màn Hình <span class="text-red">*</span></label>
                 <input type="text" name="monitor" class="form-control" id="monitor" placeholder="Màn hình" required autocomplete="off" value="{{ $product->monitor }}">
-              </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
+        </div>
+    @endif
+    @if(!empty($product->front_camera))
+        <div class="col-md-4">
+            <div class="form-group">
                 <label for="front_camera">Camera Trước <span class="text-red">*</span></label>
                 <input type="text" name="front_camera" class="form-control" id="front_camera" placeholder="Camera trước" required autocomplete="off" value="{{ $product->front_camera }}">
-              </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
+        </div>
+    @endif
+    @if(!empty($product->rear_camera))
+        <div class="col-md-4">
+            <div class="form-group">
                 <label for="rear_camera">Camera Sau <span class="text-red">*</span></label>
                 <input type="text" name="rear_camera" class="form-control" id="rear_camera" placeholder="Camera sau" required autocomplete="off" value="{{ $product->rear_camera }}">
-              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
+        </div>
+    @endif
+</div>
+      <div class="row">
+    @if(!empty($product->OS))
+        <div class="col-md-4">
+            <div class="form-group">
                 <label>Hệ Điều Hành <span class="text-red">*</span></label>
                 <select class="form-control" name="OS" required>
-                  <option value="">-- Chọn hệ điều hành --</option>
-                  <option value="Android" {{ $product->OS == 'Android' ? 'selected' : '' }}>Android</option>
-                  <option value="IOS" {{ $product->OS == 'IOS' ? 'selected' : '' }}>IOS</option>
-                  <option value="Windows Phone" {{ $product->OS == 'Windows Phone' ? 'selected' : '' }}>Windows Phone</option>
+                    <option value="">-- Chọn hệ điều hành --</option>
+                    <option value="Android" {{ $product->OS == 'Android' ? 'selected' : '' }}>Android</option>
+                    <option value="IOS" {{ $product->OS == 'IOS' ? 'selected' : '' }}>IOS</option>
+                    <option value="Windows Phone" {{ $product->OS == 'Windows Phone' ? 'selected' : '' }}>Windows Phone</option>
                 </select>
-              </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
+        </div>
+    @endif
+    @if(!empty($product->CPU))
+        <div class="col-md-4">
+            <div class="form-group">
                 <label for="CPU">CPU <span class="text-red">*</span></label>
                 <input type="text" name="CPU" class="form-control" id="CPU" placeholder="CPU" required autocomplete="off" value="{{ $product->CPU }}">
-              </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
+        </div>
+    @endif
+    @if(!empty($product->GPU))
+        <div class="col-md-4">
+            <div class="form-group">
                 <label for="GPU">GPU <span class="text-red">*</span></label>
                 <input type="text" name="GPU" class="form-control" id="GPU" placeholder="GPU" required autocomplete="off" value="{{ $product->GPU }}">
-              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
+        </div>
+    @endif
+</div>
+
+    <div class="row">
+    @if(!empty($product->RAM))
+        <div class="col-md-4">
+            <div class="form-group">
                 <label for="RAM">RAM (GB) <span class="text-red">*</span></label>
                 <input type="number" min="1" name="RAM" class="form-control" id="RAM" placeholder="RAM" required autocomplete="off" value="{{ $product->RAM }}">
-              </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
+        </div>
+    @endif
+    @if(!empty($product->ROM))
+        <div class="col-md-4">
+            <div class="form-group">
                 <label for="ROM">ROM (GB) <span class="text-red">*</span></label>
                 <input type="number" min="1" name="ROM" class="form-control" id="ROM" placeholder="ROM" required autocomplete="off" value="{{ $product->ROM }}">
-              </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
+        </div>
+    @endif
+    @if(!empty($product->pin))
+        <div class="col-md-4">
+            <div class="form-group">
                 <label for="pin">PIN <span class="text-red">*</span></label>
                 <input type="text" name="pin" class="form-control" id="pin" placeholder="Pin" required autocomplete="off" value="{{ $product->pin }}">
-              </div>
             </div>
-          </div>
         </div>
+    @endif
+</div>
+
+
       </div>
     </div>
   </div>
@@ -273,6 +326,48 @@
                     </div>
                   </div>
                 </div>
+
+
+<div class="col-md-4">
+    <div class="form-group">
+        <label for="capacity_{{ $product_detail->id }}">Dung Lượng <span class="text-red">*</span></label>
+        <select class="form-control" name="old_product_details[{{ $product_detail->id }}][capacity]">
+            <option value="">-- Chọn dung lượng --</option>
+            <option value="64" {{ $product_detail['capacity'] == '64' ? 'selected' : '' }}>64</option>
+            <option value="128" {{ $product_detail['capacity'] == '128' ? 'selected' : '' }}>128</option>
+            <option value="256" {{ $product_detail['capacity'] == '256' ? 'selected' : '' }}>256</option>
+            <option value="512" {{ $product_detail['capacity'] == '512' ? 'selected' : '' }}>512</option>
+            <option value="1T" {{ $product_detail['capacity'] == '1T' ? 'selected' : '' }}>1T</option>
+        </select>
+    </div>
+</div>
+
+{{-- <div class="col-md-4">
+    <div class="form-group">
+        <label for="capacity_{{$key}}">Dung Lượng <span class="text-red">*</span></label>
+        <select class="form-control" name="product_details[{{$key}}][capacity]">
+            <option value="">-- Chọn dung lượng --</option>
+            <option value="64" {{ $product_detail->capacity == '64' ? 'selected' : '' }}>64</option>
+            <option value="128" {{ $product_detail->capacity == '128' ? 'selected' : '' }}>128</option>
+            <option value="256" {{ $product_detail->capacity == '256' ? 'selected' : '' }}>256</option>
+            <option value="512" {{ $product_detail->capacity == '512' ? 'selected' : '' }}>512</option>
+            <option value="1T" {{ $product_detail->capacity == '1T' ? 'selected' : '' }}>1T</option>
+        </select>
+    </div>
+</div> --}}
+{{-- @foreach ($request->product_details as $product_detail)
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="capacity_{{ $loop->index }}">Dung Lượng <span class="text-red">*</span></label>
+            <select class="form-control" name="product_details[{{ $loop->index }}][capacity]">
+                <option value="">-- Chọn dung lượng --</option>
+                <option value="64" {{ isset($product_detail['capacity']) && $product_detail['capacity'] == '64' ? 'selected' : '' }}>64</option>
+                <!-- Các option khác -->
+            </select>
+        </div>
+    </div>
+@endforeach --}}
+
               </div>
               <div class="form-group" style="margin-bottom: 0;">
                 <label>Hình Ảnh Chi Tiết <span class="text-red">*</span></label>
@@ -822,6 +917,8 @@
             </div>
           </div>
         </div>
+
+
       </div>
       <div class="form-group" style="margin-bottom: 0;">
         <label>Hình Ảnh Chi Tiết <span class="text-red">*</span></label>

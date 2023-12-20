@@ -41,57 +41,75 @@ class HomePage extends Controller
     //   ->latest()
     //   ->limit(8)
     //   ->get();
-    $product_phone = Product::select('id', 'name', 'image', 'slug', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'rate', 'category_id')
-      ->whereHas('product_detail', function (Builder $query) {
+   $currentDateTime = now();
+
+$product_phone = Product::select('id', 'name', 'image', 'slug', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'rate', 'category_id')
+    ->whereHas('product_detail', function (Builder $query) {
         $query->where('quantity', '>', 0);
-      })
-      ->where('category_id', '=', '1') // Thay 'your_category_id_for_phone' bằng giá trị category_id cho điện thoại
-      ->with([
+    })
+    ->where('category_id', '=', '1') // Thay '1' bằng category_id thực tế cho điện thoại
+    ->where(function ($query) use ($currentDateTime) {
+        $query->where('discount', '=', 0) // Chỉ lấy sản phẩm không có giảm giá
+              ->orWhere(function ($query) use ($currentDateTime) {
+                  $query->where('start_date', '>', $currentDateTime)
+                        ->orWhere('end_date', '<', $currentDateTime);
+              });
+    })
+    ->with([
         'product_detail' => function ($query) {
-          $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
-            ->where('quantity', '>', 0)
-            ->orderBy('sale_price', 'ASC');
+            $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
+                ->where('quantity', '>', 0)
+                ->orderBy('sale_price', 'ASC');
         },
         'productImages' => function ($query) {
-          $query->select('product_images.id', 'product_detail_id', 'image_name'); // chỉ định rõ trường id ở đây
+            $query->select('product_images.id', 'product_detail_id', 'image_name');
         },
-      ])
-      ->latest()
-      ->limit(8)
-      ->get();
-    //   dd ($product_phone->toArray());
-    // dd ($products->toArray());
-    $product_watch = Product::select('id', 'name', 'image', 'slug', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'rate', 'category_id')
-      ->whereHas('product_detail', function (Builder $query) {
+    ])
+    ->latest()
+    ->limit(8)
+    ->get();
+// dd($product_phone->toArray());
+
+
+$product_watch = Product::select('id', 'name', 'image', 'slug', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'rate', 'category_id', 'discount', 'start_date', 'end_date')
+    ->whereHas('product_detail', function (Builder $query) {
         $query->where('quantity', '>', 0);
-      })
-      ->where('category_id', '=', '2') // Thay 'your_category_id_for_watch' bằng giá trị category_id cho đồng hồ
-      ->with([
+    })
+    ->where('category_id', '=', '2') // Thay '2' bằng category_id thực tế cho đồng hồ
+    ->where(function ($query) use ($currentDateTime) {
+        $query->where('discount', '=', 0) // Chỉ lấy sản phẩm không có giảm giá
+              ->orWhere(function ($query) use ($currentDateTime) {
+                  $query->where('start_date', '>', $currentDateTime)
+                        ->orWhere('end_date', '<', $currentDateTime);
+              });
+    })
+    ->with([
         'product_detail' => function ($query) {
-          $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
-            ->where('quantity', '>', 0)
-            ->orderBy('sale_price', 'ASC');
+            $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
+                ->where('quantity', '>', 0)
+                ->orderBy('sale_price', 'ASC');
         },
         'productImages' => function ($query) {
-          $query->select('product_images.id', 'product_detail_id', 'image_name'); // chỉ định rõ trường id ở đây
+            $query->select('product_images.id', 'product_detail_id', 'image_name');
         },
-      ])
-      ->latest()
-      ->limit(8)
-      ->get();
-    //   dd ($product_watch->toArray());
+    ])
+    ->latest()
+    ->limit(8)
+    ->get();
+// dd($product_watch->toArray());
+
 
 $product_phukien = Product::select('id', 'name', 'image', 'slug', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'rate', 'category_id')
     ->whereHas('product_detail', function ($query) {
         $query->where('quantity', '>', 0);
     })
     ->where(function ($query) {
-        $query->orWhere('category_id', '<>', '3') // Thay 'your_specific_category_id' bằng giá trị category_id cụ thể
+        $query->orWhere('category_id', '=', '3') // Thay 'your_specific_category_id' bằng giá trị category_id cụ thể
               ->orWhereNull('category_id');
     })
     ->with([
         'product_detail' => function ($query) {
-            $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
+        $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date' ,'color' ,'capacity')
                 ->where('quantity', '>', 0)
                 ->orderBy('sale_price', 'ASC');
         },

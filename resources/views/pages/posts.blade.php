@@ -2,7 +2,22 @@
 @extends('layouts.master')
 
 @section('title', 'Tin Tức')
-
+<style>
+    .pagination a:hover {
+    background-color: #ff9800; /* Mã màu cam */
+    color: #fff; /* Màu chữ trắng */
+}
+.pagination .active .page-link {
+    /* Mã màu cam */
+    background-color: #ff0000 !important;
+    border: 1px solid #ff0000 !important;
+}
+/* Tô màu cam nhạt cho trang hiện tại */
+.pagination .active a {
+    background-color: #ffc107; /* Mã màu cam nhạt */
+    color: #fff; /* Màu chữ trắng */
+}
+</style>
 @section('content')
 
   <section class="bread-crumb">
@@ -61,7 +76,8 @@
             </div>
             @if($data['posts']->isNotEmpty())
               <div class="section-footer text-center">
-                {{ $data['posts']->links() }}
+                {{-- {{ $data['posts']->links() }} --}}
+   {{ $data['posts']->appends(Request::query())->links('pagination::bootstrap-4') }}
               </div>
             @endif
           </div>

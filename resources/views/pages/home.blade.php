@@ -95,7 +95,7 @@
       <div class="container-fluid my-5">
         <h2 class="text-center">DANH MỤC NỔI BẬT</h2>
       <div class="row justify-content-center">
-  <div class="col-lg-2 col-md-2 col-sm-6 col-xl-2 p-3">
+  <div class="col-lg-2 col-md-2 col-6 col-sm-6 col-xl-2 p-3">
     <a href="" title="Iphone" class="link-category">
       <div class="item-category">
         <img src="https://bizweb.dktcdn.net/100/480/632/themes/900313/assets/cate_1.png?1700210116789" class="owl-lazy" alt="">
@@ -104,7 +104,7 @@
     </a>
   </div>
 
-  <div class="col-lg-2 col-md-2 col-sm-6 col-xl-2 p-3">
+  <div class="col-lg-2 col-md-2 col-6 col-sm-6 col-xl-2 p-3">
     <a href="" title="Iphone" class="link-category">
       <div class="item-category">
         <img src="https://bizweb.dktcdn.net/100/480/632/themes/900313/assets/cate_4.png?1700210116789" class="owl-lazy" alt="">
@@ -113,7 +113,7 @@
     </a>
   </div>
 
-  <div class="col-lg-2 col-md-2 col-sm-6 col-xl-2 p-3">
+  <div class="col-lg-2 col-md-2 col-6 col-sm-6 col-xl-2 p-3">
     <a href="" title="Iphone" class="link-category">
       <div class="item-category">
         <img src="https://cdn.tgdd.vn//content/Loa-90x110.png" class="owl-lazy" alt="">
@@ -122,7 +122,7 @@
     </a>
   </div>
 
-  <div class="col-lg-2 col-md-2 col-sm-6 col-xl-2 p-3">
+  <div class="col-lg-2 col-md-2 col-6 col-sm-6 col-xl-2 p-3">
     <a href="" title="Iphone" class="link-category">
       <div class="item-category">
         <img src="https://cdn.tgdd.vn//content/PC-90x110.png" class="owl-lazy" alt="">
@@ -378,7 +378,7 @@ function padZero(number) {
 {{-- favorite_products --}}
 @foreach ($data['favorite_products'] as $product)
 
-       <div class="flashsale__item px-2">
+       <div class="flashsale__item col-12 col-sm-6 col-lg-2 px-2">
 
       <div class="item_product_main  px-2">
         <form action="">
@@ -444,7 +444,22 @@ function padZero(number) {
             </h3>
             <div class="product-item-cta position-relative">
               <div class="price-box">
-                <span class="price">{{ number_format($product->flash_sale_price) }}₫</span>
+                {{-- <span class="price">{{ number_format($product->flash_sale_price) }}₫</span> --}}
+                   <div class="price-box">
+                {{-- <span class="price">{{ number_format($product->flash_sale_price) }}₫</span> --}}
+                 {!! Helper::get_real_price_flashsale(
+        $product->product_detail->sale_price,
+        $product->product_detail->promotion_price,
+        $product->product_detail->promotion_start_date,
+        $product->product_detail->promotion_end_date,
+        $product->start_date,
+        $product->end_date,
+        $product->discount,
+        $product->flash_sale_price
+
+
+    ) !!}
+              </div>
               </div>
               <input
                 class="hidden"
@@ -461,7 +476,7 @@ function padZero(number) {
                 type="button"
               >
                <!-- icon cart -->
-              <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 512 512">
+              <svg  xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 512 512">
 
 <defs>
 
@@ -616,6 +631,7 @@ function getRandomInt(min, max) {
                       width="100px"
                       height="100px"
                       viewBox="0 0 512 512"
+                      class="svg-icon-1"
                     >
                       <defs>
                         <style>
@@ -734,7 +750,7 @@ function getRandomInt(min, max) {
                     <div class="position-relative">
                         {!! Helper::get_promotion_html($product->product_detail->promotion_price,
                         $product->product_detail->sale_price,) !!}
-                        <button
+                        {{-- <button
                     data-href="/dien-thoai-iphone-13"
                     data-handle="dien-thoai-iphone-13"
                     class="product-item-btn btn left-to quick-view"
@@ -772,7 +788,7 @@ function getRandomInt(min, max) {
                         />
                       </g>
                     </svg>
-                  </button>
+                  </button> --}}
                     </div>
                     <span class="product-promo-tag product-promo-tag--3 product-promo-tag--text-2 px-2"
                         style="color: #8f8f8f; background: #e0dbdb4f; border: #ff1010">
@@ -839,6 +855,7 @@ function getRandomInt(min, max) {
     @foreach($data['product_phukien'] as $key => $product)
 
         <div class="col-lg-15 col-md-3  product-col p-2">
+
             <a href="{{ route('product_page', ['id' => $product->slug]) }}" title="{{ $product->name }}">
                 <div class="box-hover">
 
@@ -862,10 +879,41 @@ function getRandomInt(min, max) {
                     <div class="position-relative">
                         {!! Helper::get_promotion_html($product->product_detail->promotion_price,
                         $product->product_detail->sale_price,) !!}
+                  <form id="add-to-cart-form" action="{{ route('add_cart') }}" method="post">
+
+                        @csrf
+                        {{-- chọn dung luong  --}}
+                             <div class="row capacity-container hidden">
+
+    @php $displayedCapacity = null; @endphp
+
+
+            @if($product->product_detail->capacity != $displayedCapacity)
+            <div class="capacity col-md-4 border-dark border-primary">
+              <div class="capacity-option" data-key="{{ $key }}">{{ $product->product_detail->capacity }}</div>
+            </div>
+                 @endif
+            @php $displayedCapacity = $product->product_detail->capacity; @endphp
+
+
+</div>
+                           <div class="row hidden">
+
+  <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12 width_lgcol">
+ <div class="color-inner {{ $key == 0 ? 'active' : '' }}" data-key="{{ $key }}" product-id="{{ $product->product_detail->id }}" data-capacity="{{ $product->product_detail->capacity }}"  can-buy="{{ $product->quantity > 0 ? '1' : '0'}}" data-qty="{{ $product->product_detail->quantity }}">
+      <div class="select-inner">
+        <div class="image-color"><img src="{{ Helper::get_image_product_url($product->product_detail->product_images[0]->image_name ?? 'not-image.jpg') }}"></div>
+        <div class="image-name">{{$product->product_detail->color }}</div>
+      </div>
+    </div>
+  </div>
+
+
+    </div>
+                        <input type="hidden" name="product_id" value="{{ $product->id}}" id="product-id">
                         <button
-                    data-href="/dien-thoai-iphone-13"
-                    data-handle="dien-thoai-iphone-13"
-                    class="product-item-btn btn left-to quick-view"
+                     data-url="{{ route('add_cart') }}"
+                    class="product-item-btn btn left-to quick-view btn btn-add-to-cart btn-lg btn-gray btn-cart btn_ add_to_cart"
                     title="Tùy chọn"
                     type="button"
                   >
@@ -874,6 +922,7 @@ function getRandomInt(min, max) {
                       width="100px"
                       height="100px"
                       viewBox="0 0 512 512"
+                      class="svg-icon-1"
                     >
                       <defs>
                         <style>
@@ -901,6 +950,7 @@ function getRandomInt(min, max) {
                       </g>
                     </svg>
                   </button>
+                     </form>
                     </div>
                     <span class="product-promo-tag product-promo-tag--3 product-promo-tag--text-2 px-2"
                         style="color: #8f8f8f; background: #e0dbdb4f; border: #ff1010">
@@ -998,6 +1048,65 @@ function getRandomInt(min, max) {
         )
       @endif
 
+    });
+  </script>
+   <script src="{{ asset('common/Rate/rater.js') }}"></script>
+  <script src="{{ asset('common/lightGallery/dist/js/lightgallery.js') }}"></script>
+  <script src="{{ asset('common/lightslider/dist/js/lightslider.js') }}"></script>
+  <script src="{{ asset('js/product.js') }}"></script>
+  <script>
+  $(document).ready(function() {
+
+
+    // Xử lý khi chọn màu sắc
+    $(document).on('click', '.color-inner', function () {
+        var productId = $(this).data('product-id');
+        $('#product-id').val(productId); // Cập nhật ID sản phẩm vào form
+    });
+
+    // Xử lý khi thêm vào giỏ hàng
+    $('.btn-add-to-cart').on('click', function () {
+    event.preventDefault();
+
+        var productId = $('#product-id').val(); // Lấy ID sản phẩm từ form
+        var quantity = 1
+        var color = $('.color-inner ').find('.image-name').text().trim(); // Lấy màu sắc
+
+           console.log(productId + ' - ' + quantity + ' - ' + color);
+        // Kiểm tra dữ liệu trước khi gửi
+            if (productId && quantity && quantity > 0) {
+            var form = $('#add-to-cart-form');
+            form.submit(); // Gửi form đến server
+        } else {
+            // Hiển thị thông báo lỗi nếu thông tin không đầy đủ
+            // alert('Vui lòng chọn đầy đủ thông tin sản phẩm.');
+        }
+    });
+
+
+
+      $(".section-rating .rating-form form").submit( function(eventObj) {
+        $("<input />").attr("type", "hidden")
+          .attr("name", "rate")
+          .attr("value", $(".rating-product").rate("getValue"))
+          .appendTo(".section-rating .rating-form form");
+        return true;
+      });
+      @if(session('vote_alert'))
+        scrollToxx();
+        Swal.fire(
+          '{{ session('vote_alert')['title'] }}',
+          '{{ session('vote_alert')['content'] }}',
+          '{{ session('vote_alert')['type'] }}'
+        );
+      @endif
+      @if(session('alert'))
+        Swal.fire(
+          '{{ session('alert')['title'] }}',
+          '{{ session('alert')['content'] }}',
+          '{{ session('alert')['type'] }}'
+        );
+      @endif
     });
   </script>
 @endsection

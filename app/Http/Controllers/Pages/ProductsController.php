@@ -11,7 +11,7 @@ use App\Models\Producer;
 use App\Models\Product;
 use App\Models\Advertise;
 use App\Models\ProductVote;
-
+use App\Models\Category;
 class ProductsController extends Controller
 {
 public function index(Request $request)
@@ -70,11 +70,15 @@ public function index(Request $request)
     ])->latest()->limit(5)->get(['product_id', 'title', 'image']);
 
     $producers = Producer::select('id', 'name')->get();
-
-    // Lấy danh sách slug từ kết quả truy vấn
+// dd ($producers);
+     $categories = Category::select ('id', 'name', 'slug'
+     )->get();
+    // dd ($categories);
+    // Lấy danh sách slug từ kết quả truy vấnuse App\Models\Category;
     $slugs = Product::pluck('slug');
     // dd($slugs);
     // dd($products);
+
     return view('pages.products')->with(['data' => ['advertises' => $advertises, 'producers' => $producers, 'products' => $products, 'slugs' => $slugs]]);
 }
 
@@ -115,7 +119,7 @@ public function index(Request $request)
         $join->on('products.id', '=', 'min_price_query.product_id');
       })->select('id','name','slug', 'image', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'rate ')->orderBy('min_sale_price', $request->input('price'));
     } else {
-      $query_products->select('id','name','name', 'image', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'rate')->latest();
+      $query_products->select('id','name','slug', 'image', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'rate')->latest();
     }
 
     if($request->has('type') && $request->input('type') == 'vote')
@@ -131,11 +135,19 @@ public function index(Request $request)
 
     $producers = Producer::where('id', '<>', $id)->select('id', 'name')->get();
     $producer = Producer::select('id', 'name')->find($id);
+ $producerSlugs = $query_products->where('producer_id', $id)->pluck('slug');
 
     if(!$producer) abort(404);
-
-    return view('pages.producer')->with(['data' => ['advertises' => $advertises, 'producers' => $producers, 'products' => $products], 'producer' => $producer]);
-  }
+   return view('pages.producer')->with([
+        'data' => [
+            'advertises' => $advertises,
+            'producers' => $producers,
+            'products' => $products,
+            'producerSlugs' => $producerSlugs, // Add slugs to the data array
+        ],
+        'producer' => $producer,
+    ]);
+}
 
 //   public function getProduct(Request $request, $id) {
 

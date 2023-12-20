@@ -10,8 +10,8 @@
 }
 .pagination .active .page-link  {
  /* Mã màu cam */
- background-color: #ff9800 !important ;
- border: 1px solid #ff9800 !important ;
+ background-color: #ff0000 !important;
+ border: 1px solid #ff0000 !important;
 
 }
 /* Tô màu cam nhạt cho trang hiện tại */
@@ -46,6 +46,7 @@
     <section class="section-filter">
       <div class="section-header">
         <h2 class="section-title">Tìm Kiếm Và Sắp Xếp</h2>
+
       </div>
       <div class="section-content">
         <form action="{{ route('products_page') }}" method="GET" accept-charset="utf-8">
@@ -93,8 +94,11 @@
                     <option value='vote' {{ Request::input('type') == 'vote' ? 'selected' : '' }}>
                       Sản phẩm đánh giá cao
                     </option>
+                    {{-- danh mục   --}}
+
                   </select>
                 </div>
+
               </div>
             </div>
             <div class="col-md-2">

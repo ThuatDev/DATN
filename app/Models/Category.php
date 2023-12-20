@@ -10,7 +10,8 @@ class Category extends Model
   protected $fillable = ['name'];
   public function getTypesAttribute()
     {
-        return $this->producers()->pluck('name')->toArray();
+        // return $this->producers()->pluck('name')->toArray();
+         return $this->producers()->get();
 
     }
 

@@ -17,7 +17,12 @@
     position: relative;
     overflow: hidden;
 }
-
+.dropdown-toggle::after {
+    display: none;
+}
+.menu-item-xp:hover {
+    color: #dd0115 !important;
+}
 .post-item-image img {
     position: absolute;
     top: 0;
@@ -647,6 +652,7 @@ body {
     bottom: 0;
     right: 0;
 }
+
 .new-posts .posts-content .post-item {
     padding: 10px;
     border-top: 1px solid #ededed;
@@ -2249,6 +2255,9 @@ body {
     }
     .header .main-menu .menu-item div.avatar {
         width: 40px;
+    }
+    .box-icon-right {
+        display: none;
     }
     .site-home .new-posts {
         margin-top: 20px;

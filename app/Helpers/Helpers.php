@@ -3,7 +3,7 @@
 namespace App\Helpers;
 
 use Illuminate\Support\Facades\DB;
-
+use Carbon\Carbon;
 /**
  * param vote rate
  * return string html start vote
@@ -73,6 +73,61 @@ $output = '<del>'.number_format($price,0,',','.').'₫</del><strong>'.number_for
       $output = '<strong>'.number_format($price,0,',','.').'₫</strong>';
     return $output;
   }
+//   flash sale
+// $product->product_detail->sale_price,
+//         $product->flash_sale_price,
+//         $product->product_detail->promotion_start_date,
+//         $product->product_detail->promotion_end_date,
+//         $product->start_date,
+//         $product->end_date,
+//         $product->discount
+public static function get_real_price_flashsale($price, $promotion_price, $promotion_start_date, $promotion_end_date, $start_date, $end_date, $discount, $flash_sale_price) {
+    $output = '';
+
+    if ($start_date <= now() && $end_date >= now() && $discount > 0) {
+        $output = '<span class="original-price"><strong>' . number_format($flash_sale_price, 0, ',', '.') . '₫</strong></span>';
+    } elseif ($promotion_price !== null && $promotion_start_date <= now()->format('Y-m-d') && $promotion_end_date >= now()->format('Y-m-d')) {
+   $output = '<del>'.number_format($price,0,',','.').'₫</del><strong>'.number_format($promotion_price,0,',','.').'₫</strong>';
+    } else {
+        $output = '<strong>' . number_format($price, 0, ',', '.') . '₫</strong>';
+    }
+
+    return $output;
+}
+
+//     $now = Carbon::now();
+
+//     if ($promotion_price !== null && $promotion_start_date <= $now->format('Y-m-d') && $promotion_end_date >= $now->format('Y-m-d')) {
+//         // Còn thời gian flash sale
+//         $remainingTime = Carbon::parse($end_date)->diff($now)->format('%H giờ %i phút %s giây');
+//         $output = '<span class="original-price"><del>' . number_format($price, 0, ',', '.') . '₫</del></span>';
+//         $output .= '<span class="discounted-price"><strong>' . number_format($promotion_price, 0, ',', '.') . '₫</strong></span>';
+//         $output .= ' <span class="remaining-time">(Flash Sale còn ' . $remainingTime . ')</span>';
+//     } else {
+//         // Hết thời gian flash sale
+//         $output = '<span class="original-price"><strong>' . number_format($price, 0, ',', '.') . '₫</strong></span>';
+//     }
+
+//     return $output;
+// }
+
+// v2
+public static function get_real_price_cart($price, $promotion_price, $promotion_start_date, $promotion_end_date, $start_date, $end_date, $discount) {
+    $output = '';
+
+    // Check if there is an active flash sale with a discount greater than 0
+    if ($start_date <= date('Y-m-d H:i:s') && $end_date >= date('Y-m-d H:i:s') && $discount > 0) {
+        $output = '<strong>' . number_format($promotion_price, 0, ',', '.') . '₫</strong>';
+    } elseif ($promotion_price != null && $promotion_start_date <= date('Y-m-d') && $promotion_end_date >= date('Y-m-d')) {
+        // Check if there is an active promotion
+        $output = '<del>' . number_format($price, 0, ',', '.') . '₫</del><strong>' . number_format($promotion_price, 0, ',', '.') . '₫</strong>';
+    } else {
+        // If no active flash sale or promotion, display the regular price
+        $output = '<strong>' . number_format($price, 0, ',', '.') . '₫</strong>';
+    }
+
+    return $output;
+}
   public static function get_image_avatar_url($image = null) {
     if($image != null)
       return asset('storage/images/avatars/'.$image);

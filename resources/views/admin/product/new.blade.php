@@ -148,7 +148,27 @@ function submitTypeForm(selectedType) {
 </script>
 
 
+<style>
+.upload-image {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
+.image-preview {
+    max-height: 50vh;
+    max-width: 100%;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+}
+
+.label-title {
+    margin-top: 10px; /* Điều chỉnh khoảng cách giữa hình ảnh và tiêu đề */
+}
+
+</style>
 <form id="productForm" action="{{ route('admin.product.save') }}" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
   @csrf
 {{-- $selectedCategory = $request->input('selectedCategory'); --}}
@@ -163,21 +183,32 @@ function submitTypeForm(selectedType) {
         <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse"><i class="fa fa-minus"></i></button>
       </div>
     </div>
-    <div class="box-body">
-      <div class="row">
-        <div class="col-md-3">
-          <label for="title">Hình Ảnh Hiển Thị <span class="text-red">*</span></label>
+  <div class="box-body">
+        <div class="container">
+         <div class="row justify-content-center">
+
+           <div class="col-md-12 mx-auto  h-50">
+            {{-- css cho vào giữa   --}}
+
           <div class="upload-image text-center">
-            <div title="Image Preview" class="image-preview" style="background-image: url('{{ Helper::get_image_product_url() }}'); padding-top: 100%; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 5px; border: 1px solid #f4f4f4;"></div>
+            <span class="label-title text-center">Hình Ảnh Sản Phẩm</span>
+            {{-- <div title="Image Preview" class="image-preview" style="background-image: url('{{ Helper::get_image_product_url($product->image) }}'); padding-top: 100%; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 5px; border: 1px solid #f4f4f4; object-fit: cover;
+            "></div> --}}
+             <img src="{{ Helper::get_image_product_url() }}" class="image-preview my-5 img-fluid"
+              alt="Image Preview">
+
             <label for="upload" title="Upload Image" class="btn btn-primary btn-sm"><i class="fa fa-folder-open"></i>Chọn Hình Ảnh</label>
-            <input type="file" accept="image/*" id="upload" style="display:none" name="image" required>
+            <input type="file" accept="image/*" id="upload" style="display:none" name="image">
           </div>
+        </div>
+        </div>
         </div>
           {{-- danh muc  --}}
       {{-- <input type="hidden" name="defaultCategory" value="{{ $defaultCategory }}"> --}}
         {{-- dd ra cho tôi  --}}
-
-        <div class="col-md-9">
+ {{-- <div title="Image Preview" class="image-preview" style="background-image: url('{{ Helper::get_image_product_url() }}'); padding-top: 100%; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 5px; border: 1px solid #f4f4f4;"></div> --}}
+      <div class="row">
+        <div class="col-md-12">
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">

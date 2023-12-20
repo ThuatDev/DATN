@@ -513,7 +513,7 @@ if ($selectedCategory !== null) {
   public function edit($id)
   {
     $producers = Producer::select('id', 'name')->orderBy('name', 'asc')->get();
-    $product = Product::select('id', 'producer_id', 'name', 'image', 'sku_code', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'information_details', 'product_introduction')
+    $product = Product::select('id', 'producer_id', 'name', 'image', 'sku_code', 'monitor', 'front_camera', 'rear_camera', 'CPU', 'GPU', 'RAM', 'ROM', 'OS', 'pin', 'information_details', 'product_introduction', 'category_id')
     ->whereHas('product_details', function (Builder $query) {
       $query->where('import_quantity', '>', 0);
     })->where('id', $id)->with([
@@ -533,6 +533,7 @@ if ($selectedCategory !== null) {
       }
     ])->first();
     if(!$product) abort(404);
+    // dd ($product->toArray());
     return view('admin.product.edit')->with(['product' => $product, 'producers' =>$producers]);
   }
 
@@ -629,19 +630,26 @@ if ($selectedCategory !== null) {
 
       $product->product_introduction = $product_introduction;
     }
-    $product->slug = Str::slug($request->name);
-    $product->name = $request->name;
-    $product->producer_id = $request->producer_id;
-    $product->sku_code = $request->sku_code;
-    $product->monitor = $request->monitor;
-    $product->front_camera = $request->front_camera;
-    $product->rear_camera = $request->rear_camera;
-    $product->CPU = $request->CPU;
-    $product->GPU = $request->GPU;
-    $product->RAM = $request->RAM;
-    $product->ROM = $request->ROM;
-    $product->OS = $request->OS;
-    $product->pin = $request->pin;
+    //     $product->slug = Str::slug($request->name);
+    // $product->name = $request->name;
+    // $product->producer_id = $request->producer_id;
+    // $product->sku_code = $request->sku_code;
+    // $product->OS = $request->OS;
+
+ $product->slug = Str::slug($request->name);
+$product->name = $request->name;
+$product->producer_id = $request->producer_id ?? null;
+$product->sku_code = $request->sku_code;
+$product->monitor = $request->monitor ?? null;
+$product->front_camera = $request->front_camera ?? null;
+$product->rear_camera = $request->rear_camera ?? null;
+$product->CPU = $request->CPU ?? null;
+$product->GPU = $request->GPU ?? null;
+$product->RAM = $request->RAM ?? null;
+$product->ROM = $request->ROM ?? null;
+$product->OS = $request->OS ?? null;
+$product->pin = $request->pin ?? null;
+
 
     if($request->hasFile('image')){
       $image = $request->file('image');
@@ -697,16 +705,17 @@ if ($selectedCategory !== null) {
         $promotion->save();
       }
     }
-
+    // dd ($request->old_product_details);
     if ($request->has('old_product_details')) {
       foreach ($request->old_product_details as $key => $product_detail) {
         $sum = OrderDetail::where('product_detail_id', $key)->sum('quantity');
         $old_product_detail = ProductDetail::where('id', $key)->first();
         if(!$old_product_detail) abort(404);
-
+        // dd ($old_product_detail);
         $old_product_detail->color = $product_detail['color'];
         $old_product_detail->import_quantity = $product_detail['quantity'];
         $old_product_detail->quantity = $product_detail['quantity'] - $sum;
+           $old_product_detail->capacity = $product_detail['capacity'];
         $old_product_detail->import_price = str_replace('.', '', $product_detail['import_price']);
         $old_product_detail->sale_price = str_replace('.', '', $product_detail['sale_price']);
         if($product_detail['promotion_price'] != null) {
@@ -729,47 +738,52 @@ if ($selectedCategory !== null) {
         $old_product_detail->save();
       }
     }
-
-    if ($request->has('product_details')) {
-      foreach ($request->product_details as $key => $product_detail) {
+    // dd ($request->product_details);
+   if ($request->has('product_details')) {
+    foreach ($request->product_details as $key => $product_detail) {
         $new_product_detail = new ProductDetail;
         $new_product_detail->product_id = $product->id;
-        $new_product_detail->color = $product_detail['color'];
-        $new_product_detail->import_quantity = $product_detail['quantity'];
-        $new_product_detail->quantity = $product_detail['quantity'];
-        $new_product_detail->import_price = str_replace('.', '', $product_detail['import_price']);
-        $new_product_detail->sale_price = str_replace('.', '', $product_detail['sale_price']);
-        if($product_detail['promotion_price'] != null) {
-          $new_product_detail->promotion_price = str_replace('.', '', $product_detail['promotion_price']);
+        //    $new_product_detail->capacity = $product_detail['capacity'];
+        $new_product_detail->color = isset($product_detail['color']) ? $product_detail['color'] : '';
+        $new_product_detail->import_quantity = isset($product_detail['quantity']) ? $product_detail['quantity'] : 0;
+        $new_product_detail->quantity = isset($product_detail['quantity']) ? $product_detail['quantity'] : 0;
+        $new_product_detail->import_price = isset($product_detail['import_price']) ? str_replace('.', '', $product_detail['import_price']) : 0;
+        $new_product_detail->sale_price = isset($product_detail['sale_price']) ? str_replace('.', '', $product_detail['sale_price']) : 0;
+
+        if (isset($product_detail['promotion_price'])) {
+            $new_product_detail->promotion_price = str_replace('.', '', $product_detail['promotion_price']);
         }
-        if($product_detail['promotion_date'] != null) {
-          //Xử lý ngày bắt đầu, ngày kết thúc
-          list($start_date, $end_date) = explode(' - ', $product_detail['promotion_date']);
 
-          $start_date = str_replace('/', '-', $start_date);
-          $start_date = date('Y-m-d', strtotime($start_date));
-
-          $end_date = str_replace('/', '-', $end_date);
-          $end_date = date('Y-m-d', strtotime($end_date));
-
-          $new_product_detail->promotion_start_date = $start_date;
-          $new_product_detail->promotion_end_date = $end_date;
+        if (isset($product_detail['promotion_date'])) {
+            list($start_date, $end_date) = explode(' - ', $product_detail['promotion_date']);
+            $start_date = str_replace('/', '-', $start_date);
+            $start_date = date('Y-m-d', strtotime($start_date));
+            $end_date = str_replace('/', '-', $end_date);
+            $end_date = date('Y-m-d', strtotime($end_date));
+            $new_product_detail->promotion_start_date = $start_date;
+            $new_product_detail->promotion_end_date = $end_date;
         }
 
         $new_product_detail->save();
 
-        foreach ($request->file('product_details')[$key]['images'] as $image) {
-          $image_name = time().'_'.Str::random(8).'_'.$image->getClientOriginalName();
-          $image->storeAs('images/products',$image_name,'public');
+        // Kiểm tra và lặp qua hình ảnh mới nếu có
+        if (
+            isset($request->file('product_details')[$key]['images']) &&
+            is_array($request->file('product_details')[$key]['images'])
+        ) {
+            foreach ($request->file('product_details')[$key]['images'] as $image) {
+                $image_name = time() . '_' . Str::random(8) . '_' . $image->getClientOriginalName();
+                $image->storeAs('images/products', $image_name, 'public');
 
-          $new_image = new ProductImage;
-          $new_image->product_detail_id = $new_product_detail->id;
-          $new_image->image_name = $image_name;
+                $new_image = new ProductImage;
+                $new_image->product_detail_id = $new_product_detail->id;
+                $new_image->image_name = $image_name;
 
-          $new_image->save();
+                $new_image->save();
+            }
         }
-      }
     }
+}
 
     if($request->file('old_product_details') != null){
       foreach ($request->file('old_product_details') as $key => $images) {
@@ -792,6 +806,7 @@ if ($selectedCategory !== null) {
       'content' => 'Chỉnh sửa sản phẩm thành công.'
     ]]);
   }
+
 
   public function delete_promotion(Request $request)
   {

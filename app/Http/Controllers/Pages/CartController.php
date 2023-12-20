@@ -26,7 +26,10 @@ public function addCart(Request $request) {
         ->select('id', 'product_id', 'color', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date', 'capacity', 'discount', 'start_date', 'end_date', 'discountedPrice')
         ->first();
 
+// dd($request->all());
+
     if (!$product) {
+        // dd($product);
         $data['msg'] = 'Product Not Found!';
         return response()->json($data, 404);
     }
@@ -132,9 +135,37 @@ public function addCart(Request $request) {
 
     $oldCart = Session::has('cart') ? Session::get('cart') : null;
     $cart = new Cart($oldCart);
-
+//  "id" => 196
+//           "product_id" => 99
+//           "color" => "Den"
+//           "quantity" => 2
+//           "sale_price" => 1490000
+//           "promotion_price" => 1043000
+//           "promotion_start_date" => "2023-12-11"
+//           "promotion_end_date" => "2023-12-13"
+//           "capacity" => null
+//           "discount" => "30"
+//           "start_date" => "2023-12-15 08:01:00"
+//           "end_date" => "2023-12-19 23:43:00"
+//           "discountedPrice" => 1043000
+// check trong cart item nếu   "start_date" => "2023-12-15 08:01:00"
+//           "end_date" => "2023-12-19 23:43:00"vẫn còn hiệu lục ,và discout khác 0 thì sẽ lấy giá discout_price
     // Dump and die to see the contents of $advertises and $cart
-    dd( $cart);
+
+    if ($cart->items) {
+        foreach ($cart->items as $key => $item) {
+            $now = now();
+            if ($item['item']->start_date <= $now && $item['item']->end_date >= $now && $item['item']->discount > 0) {
+                $discountedPrice = $item['item']->discountedPrice;
+            } else {
+                $discountedPrice = $item['item']->sale_price;
+            }
+            $cart->items[$key]['price'] = $discountedPrice;
+        }
+    }
+
+
+    // dd( $cart);
 
     return view('pages.cart')->with(['cart' => $cart, 'advertises' => $advertises]);
 }
@@ -152,7 +183,7 @@ public function showCheckout(Request $request)
                 ->first();
 
             // Debug - Hiển thị thông tin sản phẩm
-            dd($product);
+            // dd($product);
 
             $cart = new Cart(NULL);
             if (!$cart->add($product, $product->id, $request->qty)) {
@@ -164,7 +195,7 @@ public function showCheckout(Request $request)
             }
 
             // Debug - Hiển thị thông tin giỏ hàng
-            dd($cart);
+            // dd($cart);
 
             return view('pages.checkout')->with(['cart' => $cart, 'payment_methods' => $payment_methods, 'buy_method' => $request->type]);
         } elseif ($request->has('type') && $request->type == 'buy_cart') {
@@ -173,14 +204,14 @@ public function showCheckout(Request $request)
             $oldCart = Session::has('cart') ? Session::get('cart') : NULL;
 
             // Debug - Hiển thị thông tin giỏ hàng cũ
-            dd($oldCart);
+            // dd($oldCart);
 
             $cart = new Cart($oldCart);
             $cart->update();
             Session::put('cart', $cart);
 
             // Debug - Hiển thị thông tin giỏ hàng mới
-            dd($cart);
+            // dd($cart);
 
             return view('pages.checkout')->with(['cart' => $cart, 'payment_methods' => $payment_methods, 'buy_method' => $request->type]);
         }
@@ -249,11 +280,9 @@ public function showCheckout(Request $request)
           $order_details->order_id = $order->id;
           $order_details->product_detail_id = $item['item']->id;
           $order_details->quantity = $item['qty'];
-
           $order_details->price = $item['price'];
           $order_details->save();
 
-            $order_details->capacity = $item['item']->capacity;
           $product = ProductDetail::find($item['item']->id);
           $product->quantity = $product->quantity - $item['qty'];
           $product->save();
@@ -366,6 +395,7 @@ public function showCheckout(Request $request)
       }
     }
   }
+
 
   public function responsePayment(Request $request) {
     if ($request->filled('payment_id')) {

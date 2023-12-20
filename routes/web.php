@@ -143,6 +143,8 @@ Route::namespace('Pages')->group(function () {
     Route::post('cart/update', 'CartController@updateCart')->name('update_cart');
     Route::get('cart', 'CartController@showCart')->name('show_cart');
     Route::post('checkout', 'CartController@showCheckout')->name('show_checkout');
-    Route::post('payment', 'CartController@payment')->name('payment');
-    Route::get('payment/response', 'CartController@responsePayment')->name('payment_response');
+ Route::match(['post'], 'payment', 'CartController@payment')->name('payment');
+
+  Route::get('payment/response', 'CartController@responsePayment')->name('payment_response');
+
 });

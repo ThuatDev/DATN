@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use App\Notifications\ResetPasswordNotification;
 use App\Notifications\ActiveAccountNotification;
+use App\Models\Order;
 
 class User extends Authenticatable
 {
@@ -62,15 +63,30 @@ class User extends Authenticatable
     {
         $this->notify(new ResetPasswordNotification($token));
     }
+public function sendActiveAccountNotification($token)
+{
+    $this->notify(new ActiveAccountNotification($token));
+}
 
-    /**
-     * Send the active account notification.
-     *
-     * @param  string  $token
-     * @return void
-     */
-    public function sendActiveAccountNotification($token)
+
+
+   public function userOrders()
     {
-        $this->notify(new ActiveAccountNotification($token));
+        return $this->hasMany(Order::class, 'user_id');
     }
+
+ public function hasPurchased($product_id)
+{
+    // Kiểm tra xem người dùng có đơn hàng nào chứa sản phẩm này hay không
+    return $this->orders()->whereHas('order_details.product_detail.product', function ($query) use ($product_id) {
+        $query->where('id', $product_id);
+    })->exists();
+}
+
+    public function canReviewProduct($product_id)
+    {
+        // Kiểm tra xem người dùng có thể đánh giá sản phẩm với $product_id hay không
+        return $this->hasPurchased($product_id);
+    }
+
 }

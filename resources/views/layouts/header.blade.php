@@ -133,7 +133,7 @@
                       <h4>{{ __('header.Producer') }}</h4>
                       <ul class="dropdown-menu-subitem">
                         @foreach($producers as $producer)
-                          <li class="{{ Helper::check_param_active('producer_page', $producer->id) }}"><a href="{{ route('producer_page', ['id' => $producer->id]) }}" title="{{ $producer->name }}">{{ $producer->name }}</a></li>
+                          <li class="{{ Helper::check_param_active('producer_page', $producer->id) }}"><a class="menu-item-xp" href="{{ route('producer_page', ['id' => $producer->id]) }}" title="{{ $producer->name }}">{{ $producer->name }}</a></li>
                         @endforeach
                       </ul>
                     </li>
@@ -348,10 +348,10 @@
     <div class="mobile-support">
       <div class="text-support">HỖ TRỢ</div>
       <div class="info-support">
-        <i class="fa fa-phone" aria-hidden="true"></i> HOTLINE: <a href="tel: +84 967 999 999" title="(+84) 967 999 999">(+84) 967 999 999</a>
+        <i class="fa fa-phone" aria-hidden="true"></i> HOTLINE: <a href="tel: +84 365 642 287" title="(+84) 365 642 287">(+84) 365 642 287</a>
       </div>
       <div class="info-support">
-        <i class="fa fa-envelope" aria-hidden="true"></i> EMAIL: <a href="mailto:phonestore@gmail.com" title="phonestore@gmail.com">phonestore@gmail.com</a>
+        <i class="fa fa-envelope" aria-hidden="true"></i> EMAIL: <a href="mailto:xphones.vn@gmail.com" title="xphones.vn@gmail.com">xphones.vn@gmail.com</a>
       </div>
     </div>
   </div>
